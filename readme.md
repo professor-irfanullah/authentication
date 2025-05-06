@@ -99,7 +99,7 @@ This document provides details about the available API endpoints for the applica
 }
 ```
 
-Description: Creates a new user account with the provided details.
+## Description: Creates a new user account with the provided details.
 
 ### Verify email
 
@@ -114,7 +114,7 @@ email: User's email address
 }
 ```
 
-Description: Verifies a user's email address using the token sent to their email.
+## Description: Verifies a user's email address using the token sent to their email.
 
 ### Login
 
@@ -130,7 +130,7 @@ Request Body:
 }
 ```
 
-Description: Authenticates a user and returns an access token.
+## Description: Authenticates a user and returns an access token.
 
 ### Protected route
 
@@ -139,12 +139,16 @@ Description: Authenticates a user and returns an access token.
 **Content-Type:** `application/json`
 Description: A protected route that requires authentication.
 
+---
+
 ### Test Endpoint
 
 **Test API connection**
 **Endpoint:** `/test`
 **Method:** `GET`
 Description: A simple endpoint to test if the API is running.
+
+---
 
 ### Account status check
 
@@ -156,7 +160,7 @@ Description: A simple endpoint to test if the API is running.
 /api/auth/accountStatus?email=test@test.test
 ```
 
-Description: An email is required here in order to check the status of the account from the DB
+## Description: An email is required here in order to check the status of the account from the DB
 
 ### Usage Notes
 
