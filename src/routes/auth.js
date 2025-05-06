@@ -1,0 +1,16 @@
+const express = require('express')
+const { testHandler } = require('../routeHandlers/testHandler')
+const { registerUser } = require('../routeHandlers/registerUser')
+const { LoginUser } = require('../routeHandlers/loginUser')
+const { protected } = require('../routeHandlers/protected')
+const { verifyToken } = require('../middlewares/verifyTokenMiddleware')
+const { verifyUserIdentity } = require('../utilities/verifyUserToken')
+const router = express.Router()
+router.use(express.json())
+
+router.get('/api/test', testHandler)
+router.post('/api/auth/register', registerUser)
+router.get('/api/auth/verify', verifyUserIdentity)
+router.post('/api/auth/login', LoginUser)
+router.post('/api/auth/protected', verifyToken, protected)
+module.exports = router
