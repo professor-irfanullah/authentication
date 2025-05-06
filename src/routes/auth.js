@@ -5,6 +5,8 @@ const { LoginUser } = require('../routeHandlers/loginUser')
 const { protected } = require('../routeHandlers/protected')
 const { verifyToken } = require('../middlewares/verifyTokenMiddleware')
 const { verifyUserIdentity } = require('../utilities/verifyUserToken')
+const { logOut } = require('../routeHandlers/logout')
+const { logOutMiddleware } = require('../middlewares/logoutMiddleware')
 const router = express.Router()
 router.use(express.json())
 
@@ -13,4 +15,6 @@ router.post('/api/auth/register', registerUser)
 router.get('/api/auth/verify', verifyUserIdentity)
 router.post('/api/auth/login', LoginUser)
 router.post('/api/auth/protected', verifyToken, protected)
+router.post('/api/auth/logout', logOutMiddleware, logOut)
+
 module.exports = router
