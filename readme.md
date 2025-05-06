@@ -72,9 +72,7 @@ CREATE TABLE users (
   is_verified BOOLEAN DEFAULT FALSE,
   verification_token VARCHAR(255)
 );
----
-
----
+````
 # API Documentation
 
 This document provides details about the available API endpoints for the application.
@@ -91,48 +89,53 @@ This document provides details about the available API endpoints for the applica
 **Request Body:**
 ```json
 {
-    "user_name": "irfan",
-    "email": "irfanprofessor60@gmail.com",
-    "password": "irfan"
+    "user_name": "name",
+    "email": "test@test.com",
+    "password": "test"
 }
 
-
+```
 Description: Creates a new user account with the provided details.
 
 ### Verify email
 **Endpoint:** `/auth/verify`
-Method: GET
+**Method**: `GET`
 Query Parameters:
-
+```js
+{
 token: Verification token
-
 email: User's email address
+}
+```
 Description: Verifies a user's email address using the token sent to their email.
 
-Login
-Endpoint: /auth/login
-Method: POST
-Content-Type: application/json
+### Login
+**Endpoint:** `/auth/login`
+**Method:** `POST`
+**Content-Type:** `application/json`
 Request Body:
+```json
 {
 "email": "test@gmail.com",
-"password": "irfan"
+"password": "test"
 }
+```
 Description: Authenticates a user and returns an access token.
 
-Protected route
-Endpoint: /auth/protected
-Method: POST
-Content-Type: application/json
+### Protected route
+**Endpoint:** `/auth/protected`
+**Method:** `POST`
+**Content-Type:** `application/json`
 Description: A protected route that requires authentication.
 
-Test Endpoint
-Test API connection
-Endpoint: /test
-Method: GET
+### Test Endpoint
+**Test API connection**
+**Endpoint:** `/test`
+**Method:** `GET`
 Description: A simple endpoint to test if the API is running.
 
-Usage Notes
+### Usage Notes
+```text
 All authentication endpoints require proper headers and request bodies as shown.
 
 The protected route requires a valid JWT token in the Authorization header.
@@ -143,6 +146,7 @@ Example Responses
 Successful login returns a JWT token in the format:
 
 eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+```
 
 Error Handling
 All endpoints return appropriate HTTP status codes with error messages in the response body when something goes wrong.
