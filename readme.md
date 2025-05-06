@@ -37,3 +37,36 @@ A Node.js and Express-based backend API for user authentication, featuring secur
 git clone https://github.com/your-username/your-repo-name.git
 cd your-repo-name
 ```
+## 🗄️ Database Setup (MySQL)
+
+This project uses a MySQL database. You’ll need to create the database and table before running the app.
+
+### 📋 Database Name:
+`your_database_name` (as defined in your `.env` file)
+
+### 📂 Table: `users`
+
+| Column              | Type          | Attributes                          |
+|---------------------|---------------|-------------------------------------|
+| `user_id`           | INT           | Primary Key, Auto Increment         |
+| `name`              | VARCHAR(255)  | NOT NULL                            |
+| `email`             | VARCHAR(255)  | UNIQUE, NOT NULL                    |
+| `password`          | VARCHAR(255)  | Hashed with bcrypt, NOT NULL        |
+| `created_at`        | TIMESTAMP     | Default: CURRENT_TIMESTAMP          |
+| `updated_at`        | TIMESTAMP     | Default: CURRENT_TIMESTAMP on update|
+| `is_verified`       | BOOLEAN       | Default: FALSE                      |
+| `verification_token`| VARCHAR(255)  | Nullable (used for email verification) |
+
+### 🛠️ SQL Schema Example
+
+```sql
+CREATE TABLE users (
+  user_id INT AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(255) NOT NULL,
+  email VARCHAR(255) UNIQUE NOT NULL,
+  password VARCHAR(255) NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  is_verified BOOLEAN DEFAULT FALSE,
+  verification_token VARCHAR(255)
+);
