@@ -95,12 +95,12 @@ This document provides details about the available API endpoints for the applica
     "email": "irfanprofessor60@gmail.com",
     "password": "irfan"
 }
-````
+
 
 Description: Creates a new user account with the provided details.
 
-Verify email
-Endpoint: /auth/verify
+### Verify email
+**Endpoint:** `/auth/verify`
 Method: GET
 Query Parameters:
 
@@ -143,5 +143,6 @@ Example Responses
 Successful login returns a JWT token in the format:
 
 eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+
 Error Handling
 All endpoints return appropriate HTTP status codes with error messages in the response body when something goes wrong.
