@@ -3,7 +3,7 @@ const { query } = require("../database/db")
 const verifyAccountStatus = async (req, res, next) => {
     const { email } = req.query
     if (!email) {
-        const err = new Error('Please provide a valid email address!')
+        const err = new Error('atleast one parameter is required to proceed!')
         err.status = 400
         return next(err)
     }
