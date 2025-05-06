@@ -74,20 +74,74 @@ CREATE TABLE users (
 );
 ---
 
-## 📌 API Endpoints
+---
+# API Documentation
 
-All endpoints are prefixed with `/api/auth`
+This document provides details about the available API endpoints for the application.
 
-### 🔐 Public Routes
+## Base URL
+`http://localhost:3000/api`
 
-#### 📥 `POST /api/auth/register`
-Registers a new user.
+## Authentication Endpoints
 
-- **Request Body:**
-  ```json
-  {
-    "name": "John Doe",
-    "email": "john@example.com",
-    "password": "yourPassword123"
-  }
+### Register a new user
+**Endpoint:** `/auth/register`
+**Method:** `POST`
+**Content-Type:** `application/json`
+**Request Body:**
+```json
+{
+    "user_name": "irfan",
+    "email": "irfanprofessor60@gmail.com",
+    "password": "irfan"
+}
 ````
+
+Description: Creates a new user account with the provided details.
+
+Verify email
+Endpoint: /auth/verify
+Method: GET
+Query Parameters:
+
+token: Verification token
+
+email: User's email address
+Description: Verifies a user's email address using the token sent to their email.
+
+Login
+Endpoint: /auth/login
+Method: POST
+Content-Type: application/json
+Request Body:
+{
+"email": "test@gmail.com",
+"password": "irfan"
+}
+Description: Authenticates a user and returns an access token.
+
+Protected route
+Endpoint: /auth/protected
+Method: POST
+Content-Type: application/json
+Description: A protected route that requires authentication.
+
+Test Endpoint
+Test API connection
+Endpoint: /test
+Method: GET
+Description: A simple endpoint to test if the API is running.
+
+Usage Notes
+All authentication endpoints require proper headers and request bodies as shown.
+
+The protected route requires a valid JWT token in the Authorization header.
+
+After registration, users will receive an email with a verification link.
+
+Example Responses
+Successful login returns a JWT token in the format:
+
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+Error Handling
+All endpoints return appropriate HTTP status codes with error messages in the response body when something goes wrong.
