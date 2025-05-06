@@ -146,6 +146,18 @@ Description: A protected route that requires authentication.
 **Method:** `GET`
 Description: A simple endpoint to test if the API is running.
 
+### Account status check
+
+**Endpoint:** `/accountStatus`
+**Method:** `GET`
+**Query Paramater with Example:**
+
+```text
+/api/auth/accountStatus?email=test@test.test
+```
+
+Description: An email is required here in order to check the status of the account from the DB
+
 ### Usage Notes
 
 ```text
