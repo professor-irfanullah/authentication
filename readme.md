@@ -61,7 +61,7 @@ This project uses a MySQL database. You’ll need to create the database and tab
 
 ### 🛠️ SQL Schema Example
 
-````sql
+```sql
 CREATE TABLE users (
   user_id INT AUTO_INCREMENT PRIMARY KEY,
   name VARCHAR(255) NOT NULL,
@@ -72,69 +72,82 @@ CREATE TABLE users (
   is_verified BOOLEAN DEFAULT FALSE,
   verification_token VARCHAR(255)
 );
-````
+```
+
 # API Documentation
 
 This document provides details about the available API endpoints for the application.
 
 ## Base URL
+
 `http://localhost:3000/api`
 
 ## Authentication Endpoints
 
 ### Register a new user
+
 **Endpoint:** `/auth/register`
 **Method:** `POST`
 **Content-Type:** `application/json`
 **Request Body:**
+
 ```json
 {
-    "user_name": "name",
-    "email": "test@test.com",
-    "password": "test"
+  "user_name": "name",
+  "email": "test@test.com",
+  "password": "test"
 }
-
 ```
+
 Description: Creates a new user account with the provided details.
 
 ### Verify email
+
 **Endpoint:** `/auth/verify`
 **Method**: `GET`
 Query Parameters:
+
 ```js
 {
 token: Verification token
 email: User's email address
 }
 ```
+
 Description: Verifies a user's email address using the token sent to their email.
 
 ### Login
+
 **Endpoint:** `/auth/login`
 **Method:** `POST`
 **Content-Type:** `application/json`
 Request Body:
+
 ```json
 {
-"email": "test@gmail.com",
-"password": "test"
+  "email": "test@gmail.com",
+  "password": "test"
 }
 ```
+
 Description: Authenticates a user and returns an access token.
 
 ### Protected route
+
 **Endpoint:** `/auth/protected`
 **Method:** `POST`
 **Content-Type:** `application/json`
 Description: A protected route that requires authentication.
 
 ### Test Endpoint
+
 **Test API connection**
 **Endpoint:** `/test`
 **Method:** `GET`
 Description: A simple endpoint to test if the API is running.
 
 ### Usage Notes
+
 ```text
 All authentication endpoints require proper headers and request bodies as shown.
 
