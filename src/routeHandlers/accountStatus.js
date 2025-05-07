@@ -7,12 +7,12 @@ const verifyAccountStatus = async (req, res, next) => {
         err.status = 400
         return next(err)
     }
-    const statusQuery = `select * from users where email = ?`
+    const statusQuery = `select * from users where email = $1`
     try {
         const status = await query(statusQuery, [email])
-        if (status.length) {
-            const is_verified = status[0].is_verified
-            if (is_verified === 1) {
+        if (status.rows.length) {
+            const is_verified = status.rows[0].is_verified
+            if (is_verified) {
                 return res.status(200).json({ msg: 'Your email is in active state' })
             }
             const err = new Error(`This email '${email}' is currently not verified, please verify your email to proceed!`)

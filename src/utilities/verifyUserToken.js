@@ -37,7 +37,6 @@ const verifyUserIdentity = async (req, res) => {
 
         return res.status(500).json({ err: 'Failed to update verification status' });
     } catch (err) {
-        console.error('Verification error:', err);
         res.status(500).json({ err: 'Internal server error' });
     }
 };
