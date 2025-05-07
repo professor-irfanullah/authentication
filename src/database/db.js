@@ -6,12 +6,14 @@ const { Pool } = require('pg')
 //     password: process.env.password,
 //     port: process.env.db_port || 5432
 // })
+
 const db = new Pool({
     connectionString: process.env.DATABASE_URL,
     ssl: {
-        rejectUnauthorized: false, // required in most cloud environments like Railway
+        rejectUnauthorized: false, // Required for Railway's SSL cert
     },
 });
+
 
 // Test the connection
 db.connect()
