@@ -1,11 +1,17 @@
 require('dotenv').config()
 const { Pool } = require('pg')
+// const db = new Pool({
+//     user: process.env.user,
+//     database: process.env.database,
+//     password: process.env.password,
+//     port: process.env.db_port || 5432
+// })
 const db = new Pool({
-    user: process.env.user,
-    database: process.env.database,
-    password: process.env.password,
-    port: process.env.db_port || 5432
-})
+    connectionString: process.env.DATABASE_URL,
+    ssl: {
+        rejectUnauthorized: false, // required in most cloud environments like Railway
+    },
+});
 
 // Test the connection
 db.connect()
