@@ -1,3 +1,4 @@
+/*
 require('dotenv').config()
 const { hashPassword } = require('../utilities/hashing&tokens')
 const { query } = require('../database/db')
@@ -8,10 +9,10 @@ const nodemailer = require('nodemailer')
 
 const registerUser = async (req, res, next) => {
     const { user_name, email, password } = req.body
-    const insertQuery = `insert into users(name , email , password , verification_token )
-    values(?, ?, ? , ?)
-    `
-    const duplicateCheckQuery = `select * from users where email = ? and is_verified = ?`
+    const insertQuery = `INSERT INTO users(name, email, password, verification_token)
+VALUES ($1, $2, $3, $4)`
+    const duplicateCheckQuery = `SELECT * FROM users WHERE email = $1 AND is_verified = $2`
+
     try {
         const token = crypto.randomBytes(32).toString('hex')
 
@@ -54,8 +55,88 @@ const registerUser = async (req, res, next) => {
         }
         // res.send(verificationLink)
     } catch (error) {
-        const err = new Error(error)
-        next(err)
+        // const err = new Error(error)
+        // next(err)
+        res.status(500).json({ err: error })
     }
 }
 module.exports = { registerUser }
+*/
+require('dotenv').config();
+const { hashPassword } = require('../utilities/hashing&tokens');
+const { query } = require('../database/db');
+const crypto = require('crypto');
+const nodemailer = require('nodemailer');
+
+const registerUser = async (req, res) => {
+    const { user_name, email, password } = req.body;
+
+    const insertQuery = `INSERT INTO users(name, email, password, verification_token)
+                         VALUES ($1, $2, $3, $4)`;
+    const duplicateCheckQuery = `SELECT * FROM users WHERE email = $1`;
+
+    try {
+        // Check if email already exists
+        const existingUser = await query(duplicateCheckQuery, [email]);
+
+        if (existingUser.rows.length) {
+            const user = existingUser.rows[0];
+
+            if (user.is_verified) {
+                return res.status(403).json({ msg: `This email '${email}' is already registered and verified.` });
+            } else {
+                return res.status(403).json({ msg: `This email '${email}' is already registered but not verified. Please check your inbox.` });
+            }
+        }
+
+        // Generate token and hash both token and password
+        const token = crypto.randomBytes(32).toString('hex');
+        const hashedToken = await hashPassword(token);
+        const hashedPassword = await hashPassword(password);
+
+        // Insert new user
+        const result = await query(insertQuery, [user_name, email, hashedPassword, hashedToken]);
+
+        if (result.rowCount === 1) {
+            const transporter = nodemailer.createTransport({
+                service: process.env.service,
+                auth: {
+                    user: process.env.adminEmail,
+                    pass: process.env.nodemailerPas
+                }
+            });
+
+            const verificationLink = `${req.protocol}://${req.get('host')}/api/auth/verify?token=${token}&email=${email}`;
+
+            const mailOptions = {
+                from: process.env.adminEmail,
+                to: email,
+                subject: 'Verify Your Email Address',
+                html: `
+                    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+                        <h2>Welcome to Secure Authentication System!</h2>
+                        <p>Please verify your email address to complete your registration.</p>
+                        <a href="${verificationLink}" 
+                           style="display: inline-block; padding: 10px 20px; background-color: #4CAF50; color: white; text-decoration: none; border-radius: 5px;">
+                            Verify Email
+                        </a>
+                        <p>If you didn't request this, please ignore this email.</p>
+                    </div>
+                `
+            };
+
+            await transporter.sendMail(mailOptions);
+
+            return res.status(201).json({
+                message: 'Registration successful. Please check your email to verify your account.'
+            });
+        }
+
+        res.status(500).json({ msg: 'User registration failed for unknown reasons.' });
+    } catch (error) {
+        console.error('Registration error:', error);
+        res.status(500).json({ err: error });
+    }
+};
+
+module.exports = { registerUser };
