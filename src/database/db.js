@@ -7,24 +7,11 @@ const { Pool } = require('pg')
 //     port: process.env.db_port || 5432
 // })
 
-// const db = new Pool({
-//     // connectionString: process.env.DATABASE_URL,
-//     connectionString: process.env.db_connection_url,
-
-// });
-
 const db = new Pool({
-    user: process.env.user,
-    host: process.env.db_connection_url,  // Replace with your private domain
-    database: process.env.database,
-    password: process.env.password,
-    port: 5432,
-    max: 10, // Max number of connections
-    idleTimeoutMillis: 30000, // Idle timeout in milliseconds
-    connectionTimeoutMillis: 2000, // Time to wait for a connection to be established
+    connectionString: process.env.DATABASE_URL,
     ssl: {
-        rejectUnauthorized: false // Needed for some cloud providers like Railway
-    }
+        rejectUnauthorized: false, // Required for Railway's SSL cert
+    },
 });
 
 
