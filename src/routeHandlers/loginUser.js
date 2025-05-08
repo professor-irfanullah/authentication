@@ -19,7 +19,9 @@ const LoginUser = async (req, res, next) => {
                 const token = createToken(payload)
                 res.cookie('token', token, {
                     maxAge: 3600000,
-                    httpOnly: true
+                    httpOnly: true,
+                    secure: true,
+                    samesite: 'none'
                 })
                 return res.json(payload)
             }
