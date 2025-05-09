@@ -7,16 +7,23 @@ const { verifyToken } = require('../middlewares/verifyTokenMiddleware')
 const { verifyUserIdentity } = require('../utilities/verifyUserToken')
 const { logOut } = require('../routeHandlers/logout')
 const { logOutMiddleware } = require('../middlewares/logoutMiddleware')
+const authorize = require('../middlewares/authorizationMiddleware')
+
 const { verifyAccountStatus } = require('../routeHandlers/accountStatus')
+const { seekersHandler } = require('../routeHandlers/seekersOnlyRoute')
 const router = express.Router()
 router.use(express.json())
 
 router.get('/api/test', testHandler)
-router.post('/api/auth/register', registerUser)
 router.get('/api/auth/verify', verifyUserIdentity)
+router.get('/api/auth/accountStatus', verifyAccountStatus)
+
+
+router.post('/api/auth/register', registerUser)
 router.post('/api/auth/login', LoginUser)
 router.post('/api/auth/protected', verifyToken, protected)
 router.post('/api/auth/logout', logOutMiddleware, logOut)
-router.get('/api/auth/accountStatus', verifyAccountStatus)
+router.post('/api/auth/check', verifyToken, authorize(['seeker']), seekersHandler)
+
 
 module.exports = router
