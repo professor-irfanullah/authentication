@@ -11,7 +11,7 @@ A Node.js and Express-based backend API for user authentication, featuring secur
 - 🔐 JSON Web Tokens (JWT) for authentication
 - 🍪 Session handling with **HTTP-only cookies**
 - 📧 Email support using **Nodemailer**
-- 🧮 MySQL2 for database integration
+- 🧮 pg for database integration
 - 🛡️ Environment-based configuration with `.env`
 
 ---
@@ -20,7 +20,7 @@ A Node.js and Express-based backend API for user authentication, featuring secur
 
 - **Node.js**
 - **Express**
-- **MySQL2**
+- **pg**
 - **bcrypt**
 - **jsonwebtoken**
 - **cookie-parser**
@@ -38,9 +38,9 @@ git clone https://github.com/your-username/your-repo-name.git
 cd your-repo-name
 ```
 
-## 🗄️ Database Setup (MySQL)
+## 🗄️ Database Setup (PostgreSql)
 
-This project uses a MySQL database. You’ll need to create the database and table before running the app.
+This project uses a PostgreSql database. You’ll need to create the database and table before running the app.
 
 ### 📋 Database Name:
 
@@ -48,16 +48,17 @@ This project uses a MySQL database. You’ll need to create the database and tab
 
 ### 📂 Table: `users`
 
-| Column               | Type         | Attributes                             |
-| -------------------- | ------------ | -------------------------------------- |
-| `user_id`            | INT          | Primary Key, Auto Increment            |
-| `name`               | VARCHAR(255) | NOT NULL                               |
-| `email`              | VARCHAR(255) | UNIQUE, NOT NULL                       |
-| `password`           | VARCHAR(255) | Hashed with bcrypt, NOT NULL           |
-| `created_at`         | TIMESTAMP    | Default: CURRENT_TIMESTAMP             |
-| `updated_at`         | TIMESTAMP    | Default: CURRENT_TIMESTAMP on update   |
-| `is_verified`        | BOOLEAN      | Default: FALSE                         |
-| `verification_token` | VARCHAR(255) | Nullable (used for email verification) |
+| Column               | Type                      | Attributes                             |
+| -------------------- | ------------------------- | -------------------------------------- |
+| `user_id`            | INT                       | SERIAL ,Primary Key                    |
+| `name`               | VARCHAR(255)              | NOT NULL                               |
+| `email`              | VARCHAR(255)              | UNIQUE, NOT NULL                       |
+| `password`           | VARCHAR(255)              | Hashed with bcrypt, NOT NULL           |
+| `created_at`         | TIMESTAMP                 | Default: CURRENT_TIMESTAMP             |
+| `updated_at`         | TIMESTAMP                 | Default: CURRENT_TIMESTAMP on update   |
+| `is_verified`        | BOOLEAN                   | Default: FALSE                         |
+| `verification_token` | VARCHAR(255)              | Nullable (used for email verification) |
+| `role`               | enum('seeker , employee') | DEFAULT 'seeker'                       |
 
 ### 🛠️ SQL Schema Example
 
