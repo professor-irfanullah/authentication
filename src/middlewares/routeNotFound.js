@@ -1,5 +1,5 @@
 const notFound = (req, res, next) => {
-    res.json({ err: "Route not found" })
+    res.status(404).json({ err: "Route not found" })
     next()
 }
 

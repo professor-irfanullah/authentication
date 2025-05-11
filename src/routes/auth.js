@@ -8,9 +8,12 @@ const { verifyUserIdentity } = require('../utilities/verifyUserToken')
 const { logOut } = require('../routeHandlers/logout')
 const { logOutMiddleware } = require('../middlewares/logoutMiddleware')
 const authorize = require('../middlewares/authorizationMiddleware')
+const multer = require('../middlewares/multerMiddleware')
+
 
 const { verifyAccountStatus } = require('../routeHandlers/accountStatus')
 const { seekersHandler } = require('../routeHandlers/seekersOnlyRoute')
+const { profileHandler } = require('../routeHandlers/profileUploadHandler')
 const router = express.Router()
 router.use(express.json())
 
@@ -24,6 +27,8 @@ router.post('/api/auth/login', LoginUser)
 router.post('/api/auth/protected', verifyToken, protected)
 router.post('/api/auth/logout', logOutMiddleware, logOut)
 router.post('/api/auth/check', verifyToken, authorize(['seeker']), seekersHandler)
+router.post('/api/auth/profile/picture', verifyToken, authorize(['seeker']), multer.single('file'), profileHandler)
+
 
 
 module.exports = router
