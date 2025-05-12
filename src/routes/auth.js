@@ -27,7 +27,7 @@ router.post('/api/auth/login', LoginUser)
 router.post('/api/auth/protected', verifyToken, protected)
 router.post('/api/auth/logout', logOutMiddleware, logOut)
 router.post('/api/auth/check', verifyToken, authorize(['seeker']), seekersHandler)
-router.post('/api/auth/profile/picture', verifyToken, authorize(['seeker']), multer.single('file'), profileHandler)
+router.post('/api/auth/profile/picture', verifyToken, authorize(['seeker']), multer.single('profile'), profileHandler)
 
 
 

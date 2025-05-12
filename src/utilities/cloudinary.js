@@ -8,7 +8,7 @@ const path = require('path');
 cloudinary.config({
     cloud_name: process.env.Cloud_name,
     api_key: process.env.API_key,
-    api_secret: process.env.API_secret // Click 'View API Keys' above to copy your API secret
+    api_secret: process.env.API_secret
 });
 const uploadImageOnCloudinary = async (localFilePath) => {
     if (!localFilePath) return null
