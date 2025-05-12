@@ -1,4 +1,4 @@
 const seekersHandler = async (req, res, next) => {
-    res.send('seekers only route')
+    res.status(200).json({ msg: 'Welcome back!', user: req.user })
 }
 module.exports = { seekersHandler }
