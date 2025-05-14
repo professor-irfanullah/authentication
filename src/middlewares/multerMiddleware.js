@@ -1,47 +1,43 @@
 const multer = require('multer')
 const path = require('path')
 const fs = require('fs')
-const uploadDir = path.join(__dirname, 'public/temp');
 
-// Create directory if it doesn't exist
-if (!fs.existsSync(uploadDir)) {
-    fs.mkdirSync(uploadDir, { recursive: true });
+const uploadFolder = path.join(__dirname, '../public/temp')
+const checkFileExistance = async (path) => {
+    const folderExists = fs.existsSync(path)
+    if (folderExists) return path;
+    fs.mkdirSync(path, { recursive: true })
+
+
 }
-
-// File filter function for validation
-const fileFilter = (req, file, cb) => {
-    // Allowed file types
-    const filetypes = /jpeg|jpg|png/;
-    // Check extension
-    const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
-    // Check mime type
-    const mimetype = filetypes.test(file.mimetype);
-
-    if (mimetype && extname) {
-        return cb(null, true);
-    } else {
-        const err = new Error('file format not supported , please provide jpeg , jpg , png')
-        err.status = 401
-        cb(err);
-    }
-};
-
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        cb(null, uploadDir)
+        const path = checkFileExistance(uploadFolder)
+        return cb(null, uploadFolder)
     },
     filename: (req, file, cb) => {
         const ext = path.extname(file.originalname)
-        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)
-        cb(null, file.fieldname + '-' + uniqueSuffix + ext)
+        const uniqueSuffix = Date.now() + '-' + Math.floor(Math.random() * 1E9)
+        return cb(null, file.fieldname + '-' + uniqueSuffix + ext)
     }
 })
-const upload = multer({
-    storage: storage,
-    limits: {
-        fileSize: 5 * 1024 * 1024,
-    },
-    fileFilter: fileFilter
-})
 
+const filterFile = (req, file, cb) => {
+    const fileTypes = /jpeg|png|jpg/
+    const extname = fileTypes.test(path.extname(file.originalname).toLocaleLowerCase())
+    const mimetype = fileTypes.test(file.mimetype)
+    if (extname && mimetype) {
+        return cb(null, true)
+    }
+    const err = new Error(`File format not supported!`)
+    err.status = 401
+    return cb(err)
+}
+const upload = multer({
+    storage,
+    limits: {
+        fileSize: 1 * 1024 * 1024
+    },
+    fileFilter: filterFile
+})
 module.exports = upload
