@@ -12,14 +12,11 @@ const profileHandler = async (req, res, next) => {
     const urlCheckQuery = `select * from seeker_profiles where user_id = $1`
     const insertQuery = `insert into seeker_profiles(user_id , photo_url) values($1 , $2)`
     try {
-        const dbResponse = await query(urlCheckQuery, [9])
+        const dbResponse = await query(urlCheckQuery, [req.user.user_id])
         if (dbResponse.rows.length) {
             fs.rm(filePathToRemove, { recursive: true }, (err) => {
                 if (err) throw err
-                console.log('removed');
-
             })
-            console.log(dbResponse.rows);
             const err = new Error('profile image already exists!')
             err.status = 401
             return next(err)
@@ -30,7 +27,6 @@ const profileHandler = async (req, res, next) => {
             err.status = 401
             fs.rm(filePathToRemove, { recursive: true }, (err) => {
                 if (err) throw err
-                console.log('removed');
 
             })
             return next(err)
@@ -38,17 +34,15 @@ const profileHandler = async (req, res, next) => {
 
         fs.rm(filePathToRemove, { recursive: true }, (err) => {
             if (err) throw err
-            console.log('removed');
 
         })
         const { secure_url } = response
-        const insertDbResponse = await query(insertQuery, [9, secure_url])
-        console.log(insertDbResponse);
+        await query(insertQuery, [req.user.user_id, secure_url])
 
-        res.status(200).json({ msg: 'file uploaded successfully' })
+        res.status(200).json({ msg: 'file uploaded successfully', url: secure_url })
     } catch (error) {
-        console.log(error);
-
+        const err = new Error(error)
+        next(err)
     }
 
 }
