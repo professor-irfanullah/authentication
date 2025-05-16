@@ -15,14 +15,14 @@ const router = express.Router()
 router.use(express.json())
 
 router.get('/api/test', testHandler)
-router.get('/api/auth/verify', verifyUserIdentity)
-router.get('/api/auth/accountStatus', verifyAccountStatus)
+router.get('/verify', verifyUserIdentity)
+router.get('/accountStatus', verifyAccountStatus)
 
 
-router.post('/api/auth/register', registerUser)
-router.post('/api/auth/login', LoginUser)
-router.post('/api/auth/protected', verifyToken, protected)
-router.post('/api/auth/logout', logOutMiddleware, logOut)
+router.post('/register', registerUser)
+router.post('/login', LoginUser)
+router.post('/protected', verifyToken, protected)
+router.post('/logout', logOutMiddleware, logOut)
 
 
 

@@ -11,7 +11,7 @@ app.use(cors({
     credentials: true
 }))
 app.use(cookies())
-app.use(authRouter)
+app.use('/api/auth', authRouter)
 app.use('/api/seeker', seekerRoutes)
 
 

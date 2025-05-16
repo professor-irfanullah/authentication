@@ -16,8 +16,8 @@ const { insertSeekerEducationInfo } = require('../routeHandlers/seekersOnlyHandl
 
 
 
-router.post('/api/auth/authorized_seekers_route', verifyToken, authorize(['seeker']), seekersHandler)
-router.post('/api/auth/profile/picture', verifyToken, authorize(['seeker']), multer.single('profile'), profileHandler)
+router.post('/authorized_seekers_route', verifyToken, authorize(['seeker']), seekersHandler)
+router.post('/profile/picture', verifyToken, authorize(['seeker']), multer.single('profile'), profileHandler)
 router.post('/insert/profile/record', verifyToken, authorize(['seeker']), insertUserProfileInfo)
 router.post('/insert/education/record', verifyToken, authorize(['seeker']), insertSeekerEducationInfo)
 
