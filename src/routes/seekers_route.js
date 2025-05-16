@@ -11,6 +11,7 @@ const { profileHandler } = require('../routeHandlers/profileUploadHandler')
 const authorize = require('../middlewares/authorizationMiddleware')
 const { verifyToken } = require('../middlewares/verifyTokenMiddleware')
 const { insertUserProfileInfo } = require('../routeHandlers/seekersOnlyHandlers/insertUserProfileInfo')
+const { insertSeekerEducationInfo } = require('../routeHandlers/seekersOnlyHandlers/insertUserEducationInfo')
 
 
 
@@ -18,5 +19,6 @@ const { insertUserProfileInfo } = require('../routeHandlers/seekersOnlyHandlers/
 router.post('/api/auth/authorized_seekers_route', verifyToken, authorize(['seeker']), seekersHandler)
 router.post('/api/auth/profile/picture', verifyToken, authorize(['seeker']), multer.single('profile'), profileHandler)
 router.post('/api/seeker/insert/profile/record', verifyToken, authorize(['seeker']), insertUserProfileInfo)
+router.post('/api/seeker/insert/education/record', verifyToken, authorize(['seeker']), insertSeekerEducationInfo)
 
 module.exports = router
