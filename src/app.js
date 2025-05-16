@@ -12,7 +12,7 @@ app.use(cors({
 }))
 app.use(cookies())
 app.use(authRouter)
-app.use(seekerRoutes)
+app.use('/api/seeker', seekerRoutes)
 
 
 // middlewares
