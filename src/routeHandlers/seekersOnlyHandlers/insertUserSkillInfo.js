@@ -18,7 +18,11 @@ const insertSeekerSkillRecord = async (req, res, next) => {
         }
 
     } catch (error) {
-
+        if (error.code == '22P02') {
+            const err = new Error(`proficiency_level supports only 'beginner', 'intermediate', and 'expert'.`)
+            err.status = 400
+            return next(err)
+        }
         res.status(500).json(error)
     }
 }
