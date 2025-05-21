@@ -1,6 +1,5 @@
 const { query } = require("../../database/db")
 const { uploadImageOnCloudinary } = require('../../utilities/cloudinary')
-const path = require('path')
 const fs = require('fs')
 
 const uploadSeekerCV = async (req, res, next) => {
@@ -15,7 +14,6 @@ const uploadSeekerCV = async (req, res, next) => {
         return next(err)
     }
     try {
-        // const filePath = path.join(__dirname, '../public/src')
         const urlCheckResponse = await query(urlCheckQuery, [user.user_id])
         if (urlCheckResponse.rowCount === 0) {
             const cloudinaryResponse = await uploadImageOnCloudinary(file.path)
