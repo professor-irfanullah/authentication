@@ -56,7 +56,7 @@ const uploadSeekerCV = async (req, res, next) => {
                 console.log('success');
 
             }
-            const err = new Error('Something went wrong please try again later')
+            const err = new Error('Looks like network disconnected!')
             return next(err)
         }
         const secure_url = cloudinaryResponse.secure_url

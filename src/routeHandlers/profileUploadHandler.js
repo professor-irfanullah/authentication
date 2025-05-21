@@ -72,7 +72,6 @@ const profileHandler = async (req, res, next) => {
         if (urlCheckResponse.rowCount === 0) {
             const cloudinaryResponse = await uploadImageOnCloudinary(file.path)
             if (cloudinaryResponse === null) {
-                console.log(fs.existsSync(file.path));
                 if (fs.existsSync(file.path)) {
                     fs.unlink(file.path, (err) => {
                         if (err) throw err
@@ -95,13 +94,11 @@ const profileHandler = async (req, res, next) => {
         }
         const cloudinaryResponse = await uploadImageOnCloudinary(file.path)
         if (cloudinaryResponse === null) {
-            console.log(fs.existsSync(file.path));
             if (fs.existsSync(file.path)) {
                 fs.unlink(file.path, (err) => {
                     if (err) throw err
                 })
                 console.log('success');
-
             }
             const err = new Error('Something went wrong please try again later')
             return next(err)
