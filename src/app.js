@@ -6,9 +6,8 @@ const { customErrorHandler } = require('./middlewares/customErrorHandler')
 const cors = require('cors')
 const seekerRoutes = require('./routes/seekers_route')
 const app = express()
-// origin: 'http://localhost:5173',
 app.use(cors({
-    origin: 'https://job-board-frontend-production.up.railway.app',
+    origin: 'http://localhost:5173',
     credentials: true
 }))
 app.use(cookies())
