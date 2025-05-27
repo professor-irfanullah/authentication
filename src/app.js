@@ -7,8 +7,8 @@ const cors = require('cors')
 const seekerRoutes = require('./routes/seekers_route')
 const app = express()
 app.use(cors({
-    // origin: 'http://localhost:5173',
-    origin: 'https://job-board-frontend-production.up.railway.app',
+    origin: 'http://localhost:5173',
+    // origin: 'https://job-board-frontend-production.up.railway.app',
     credentials: true
 }))
 app.use(cookies())
