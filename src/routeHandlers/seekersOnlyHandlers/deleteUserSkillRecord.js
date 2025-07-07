@@ -9,7 +9,7 @@ const deleteSeekerSkillRecord = async (req, res, next) => {
         return next(err)
     }
     try {
-        const response = await query(deleteQuery, [user.user_id, 3])
+        const response = await query(deleteQuery, [user.user_id, skill_id])
         if (response.rowCount === 1) {
             return res.status(200).json({ msg: "Operation successful" })
         }
