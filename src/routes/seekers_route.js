@@ -17,6 +17,8 @@ const { deleteSeekerSkillRecord } = require('../routeHandlers/seekersOnlyHandler
 const { uploadSeekerCV } = require('../routeHandlers/seekersOnlyHandlers/uploadUserCV')
 const { getSeekerData } = require('../routeHandlers/seekersOnlyHandlers/getSeelerInfo')
 const { getSeekerSkills } = require('../routeHandlers/seekersOnlyHandlers/getSeekerSkills')
+const { deleteEduRecord } = require('../routeHandlers/seekersOnlyHandlers/deleteEducationRecord')
+const { getSeekerEducation } = require('../routeHandlers/seekersOnlyHandlers/getUserEducationRecords')
 
 
 
@@ -28,7 +30,8 @@ router.post('/insert/profile/record', verifyToken, authorize(['seeker']), insert
 router.post('/insert/education/record', verifyToken, authorize(['seeker']), insertSeekerEducationInfo)
 router.post('/insert/skill/record', verifyToken, authorize(['seeker']), insertSeekerSkillRecord)
 
-
+router.get('/get/education/record', verifyToken, authorize(['seeker']), getSeekerEducation)
+router.get('/delete/education/record', verifyToken, authorize(['seeker']), deleteEduRecord)
 router.get('/delete/skill/record', verifyToken, authorize(['seeker']), deleteSeekerSkillRecord)
 router.get('/profile-info', verifyToken, authorize(['seeker']), getSeekerData)
 router.get('/get/skill/record', verifyToken, authorize(['seeker']), getSeekerSkills)

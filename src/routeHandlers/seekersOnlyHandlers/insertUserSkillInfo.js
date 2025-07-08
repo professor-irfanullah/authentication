@@ -3,7 +3,11 @@ const { query } = require("../../database/db")
 const insertSeekerSkillRecord = async (req, res, next) => {
     const { skill_name, proficiency_level, years_of_experience } = req.body
     const user = req.user
-    const insertQuery = `insert into seeker_skills(skill_name,proficiency_level , user_id , years_of_experience) values($1,$2,$3 , $4)`
+    const insertQuery = `insert into seeker_skills(skill_name,proficiency_level , user_id , years_of_experience) values($1,$2,$3 , $4) on conflict(skill_name , user_id) do update set
+    skill_name = excluded.skill_name,
+    proficiency_level = excluded.proficiency_level,
+    years_of_experience = excluded.years_of_experience
+    `
 
     if (!skill_name) {
         const err = new Error('Skill name is required required!')
