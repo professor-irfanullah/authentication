@@ -12,6 +12,30 @@ FIELD_OF_STUDY = excluded.FIELD_OF_STUDY,
 START_DATE = excluded.START_DATE,
 END_DATE = excluded.END_DATE
 `
+    if (!institution) {
+        const err = new Error('Please provide institution name')
+        err.status = 400
+        return next(err)
+    }
+    if (!degree) {
+        const err = new Error('Please provide valid degree information')
+        err.status = 400
+        return next(err)
+    } if (!field_of_study) {
+        const err = new Error('Please provide valid field_of_study information')
+        err.status = 400
+        return next(err)
+    }
+    if (!start_date) {
+        const err = new Error('Please provide start date information')
+        err.status = 400
+        return next(err)
+    }
+    if (!end_date) {
+        const err = new Error('Please provide end date information')
+        err.status = 400
+        return next(err)
+    }
 
     try {
         const response = await query(insertionQuery, [user.user_id, institution, degree, field_of_study, start_date, end_date])
