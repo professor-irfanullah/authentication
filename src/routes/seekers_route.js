@@ -19,6 +19,7 @@ const { getSeekerData } = require('../routeHandlers/seekersOnlyHandlers/getSeele
 const { getSeekerSkills } = require('../routeHandlers/seekersOnlyHandlers/getSeekerSkills')
 const { deleteEduRecord } = require('../routeHandlers/seekersOnlyHandlers/deleteEducationRecord')
 const { getSeekerEducation } = require('../routeHandlers/seekersOnlyHandlers/getUserEducationRecords')
+const { getSeekerProfileCompletionPercentage } = require('../routeHandlers/seekersOnlyHandlers/getSeekerProfileCompletionStatus')
 
 
 
@@ -35,4 +36,6 @@ router.get('/delete/education/record', verifyToken, authorize(['seeker']), delet
 router.get('/delete/skill/record', verifyToken, authorize(['seeker']), deleteSeekerSkillRecord)
 router.get('/profile-info', verifyToken, authorize(['seeker']), getSeekerData)
 router.get('/get/skill/record', verifyToken, authorize(['seeker']), getSeekerSkills)
+router.get('/get/profile/comp/percentage', verifyToken, authorize(['seeker']), getSeekerProfileCompletionPercentage)
+
 module.exports = router
