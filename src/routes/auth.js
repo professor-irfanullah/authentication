@@ -8,6 +8,8 @@ const { verifyUserIdentity } = require('../utilities/verifyUserToken')
 const { logOut } = require('../routeHandlers/logout')
 const { logOutMiddleware } = require('../middlewares/logoutMiddleware')
 const { verifyAccountStatus } = require('../routeHandlers/accountStatus')
+const { changePassword } = require('../routeHandlers/seekersOnlyHandlers/changePassword')
+const authorize = require('../middlewares/authorizationMiddleware')
 
 
 
@@ -23,6 +25,8 @@ router.post('/register', registerUser)
 router.post('/login', LoginUser)
 router.post('/protected', verifyToken, protected)
 router.post('/logout', logOutMiddleware, logOut)
+router.post('/change/password', verifyToken, authorize(['seeker', 'employee']), changePassword)
+
 
 
 

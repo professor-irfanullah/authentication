@@ -21,7 +21,8 @@ const getSeekerData = async (req, res, next) => {
             resume_url: response.rows[0].resume_url,
             linkedin_url: response.rows[0].linkedin_url,
             github_url: response.rows[0].github_url,
-            photo_url: response.rows[0].photo_url
+            photo_url: response.rows[0].photo_url,
+            is_public: response.rows[0].is_public
         }
         res.status(200).json({ data: userInfo })
     } catch (error) {
