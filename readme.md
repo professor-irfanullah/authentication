@@ -474,3 +474,23 @@ GET https://authentication-production-18e1.up.railway.app/api/auth/accountStatus
 ```
 
 ---
+
+## Usage Notes
+
+```text
+All authentication endpoints require proper headers and request bodies as shown.
+
+The protected route requires a valid JWT token in the Authorization header.
+
+After registration, users will receive an email with a verification link.
+```
+
+### Example Responses
+
+**Successful login returns a JWT token in the format:** `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...`
+
+**Error Handling**
+
+```text
+All endpoints return appropriate HTTP status codes with error messages in the response body when something goes wrong.
+```
