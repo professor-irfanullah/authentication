@@ -256,24 +256,6 @@ Description: A simple endpoint to test if the API is running.
 
 ## Description: An email is required here in order to check the status of the account from the DB
 
-<!-- ### Usage Notes
-
-```text
-All authentication endpoints require proper headers and request bodies as shown.
-
-The protected route requires a valid JWT token in the Authorization header.
-
-After registration, users will receive an email with a verification link.
-
-Example Responses
-Successful login returns a JWT token in the format:
-
-eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
-```
-
-Error Handling
-All endpoints return appropriate HTTP status codes with error messages in the response body when something goes wrong. -->
-
 ---
 
 ## 👤 Seeker-Specific Endpoints
@@ -491,6 +473,4 @@ After registration, users will receive an email with a verification link.
 
 **Error Handling**
 
-```text
-All endpoints return appropriate HTTP status codes with error messages in the response body when something goes wrong.
-```
+`All endpoints return appropriate HTTP status codes with error messages in the response body when something goes wrong.`
