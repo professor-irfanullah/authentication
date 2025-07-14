@@ -2,7 +2,7 @@ const { query } = require("../../database/db")
 
 const getSeekerData = async (req, res, next) => {
     const user = req.user
-    const getQuery = 'select * from users u join seeker_profiles sp on u.user_id = sp.user_id where u.user_id = $1'
+    const getQuery = 'select * from users u left join seeker_profiles sp on u.user_id = sp.user_id where u.user_id = $1'
 
     try {
         const response = await query(getQuery, [user.user_id])
