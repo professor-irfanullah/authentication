@@ -4,7 +4,7 @@ const updateData = async (req, res, next) => {
     const user = req.user
     const { profile } = req.body
     const { name, visibility } = profile
-    const updateNameQuery = `update users set name = $1 where user_id = $2 `
+    const updateNameQuery = `update users set name = $1 , updated_at = now() where user_id = $2 `
     const update_Is_privateQuery = `update seeker_profiles set is_public = $1 where user_id = $2`
 
     if (!name || name.trim() === '') {
