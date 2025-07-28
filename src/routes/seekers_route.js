@@ -21,6 +21,9 @@ const { deleteEduRecord } = require('../routeHandlers/seekersOnlyHandlers/delete
 const { getSeekerEducation } = require('../routeHandlers/seekersOnlyHandlers/getUserEducationRecords')
 const { getSeekerProfileCompletionPercentage } = require('../routeHandlers/seekersOnlyHandlers/getSeekerProfileCompletionStatus')
 const { updateData } = require('../routeHandlers/seekersOnlyHandlers/updateNameAndProfileVisibility')
+const { allJobs } = require('../routeHandlers/seekersOnlyHandlers/getAllJobs')
+const { submitJobApplication } = require('../routeHandlers/seekersOnlyHandlers/submitJobApplication')
+const { getAllAppliedApplications } = require('../routeHandlers/seekersOnlyHandlers/getAllAppliedApplications')
 
 
 
@@ -32,6 +35,7 @@ router.post('/insert/profile/record', verifyToken, authorize(['seeker']), insert
 router.post('/insert/education/record', verifyToken, authorize(['seeker']), insertSeekerEducationInfo)
 router.post('/insert/skill/record', verifyToken, authorize(['seeker']), insertSeekerSkillRecord)
 router.post('/update/profile/name/visibility', verifyToken, authorize(['seeker']), updateData)
+router.post('/insert/job/application', verifyToken, authorize(['seeker']), submitJobApplication)
 
 router.get('/get/education/record', verifyToken, authorize(['seeker']), getSeekerEducation)
 router.get('/delete/education/record', verifyToken, authorize(['seeker']), deleteEduRecord)
@@ -39,6 +43,9 @@ router.get('/delete/skill/record', verifyToken, authorize(['seeker']), deleteSee
 router.get('/profile-info', verifyToken, authorize(['seeker']), getSeekerData)
 router.get('/get/skill/record', verifyToken, authorize(['seeker']), getSeekerSkills)
 router.get('/get/profile/comp/percentage', verifyToken, authorize(['seeker']), getSeekerProfileCompletionPercentage)
+router.get('/get/all/jobs', allJobs)
+router.get('/get/seeker/applications', verifyToken, authorize(['seeker']), getAllAppliedApplications)
+
 
 
 module.exports = router
