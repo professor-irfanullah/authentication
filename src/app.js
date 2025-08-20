@@ -9,7 +9,7 @@ const employeeRoutes = require('../src/routes/employe_route')
 const app = express()
 app.use(cors({
     // origin: 'http://localhost:5173',
-    origin: 'job-board-front-end-eight.vercel.app',
+    origin: 'https://job-board-front-end-psi.vercel.app',
     credentials: true
 }))
 app.use(cookies())
