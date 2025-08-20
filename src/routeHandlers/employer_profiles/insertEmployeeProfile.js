@@ -40,11 +40,8 @@ const insertEmployeeProfile = async (req, res, next) => {
             res.status(201).json({ msg: "operation successfull" });
         }
     } catch (error) {
-        if (error.code === "23502") {
-            const err = new Error("Company Name is Required...");
-            err.status = 401;
-            return next(err);
-        }
+        console.log(error);
+
         res.status(500).json({ err: error });
     }
 };
