@@ -1,7 +1,11 @@
 const { query } = require("../database/db")
 
 const getEmployeeID = async (user_id) => {
-    const employeeIdQuery = `select ep.profile_id from employer_profiles ep where EXISTS(select 1 from  jobs j join employer_profiles ep on j.employer_id = ep.profile_id ) AND ep.user_id = $1`
+    const employeeIdQuery = `SELECT ep.profile_id
+FROM employer_profiles ep
+WHERE ep.user_id = $1
+;
+`
     if (!user_id) {
         throw new Error('Please provide an user_id')
     }
