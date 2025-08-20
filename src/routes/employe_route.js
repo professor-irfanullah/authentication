@@ -9,6 +9,7 @@ const { fetchEmployeeAllJobs } = require('../routeHandlers/employer_profiles/fet
 const { postJob } = require('../routeHandlers/employer_profiles/insertJob')
 const { deleteJob } = require('../routeHandlers/employer_profiles/deleteJobPosting')
 const { updateJob } = require('../routeHandlers/employer_profiles/updateJobs')
+const { fetchData } = require('../routeHandlers/employer_profiles/fetchApplicantDetails')
 router.use(express.json())
 
 router.post('/insertProfile', verifyToken, authorize(['employee']), insertEmployeeProfile)
@@ -19,6 +20,8 @@ router.post('/update/job', verifyToken, authorize(['employee']), updateJob)
 router.get('/fetchProfile', verifyToken, authorize(['employee']), fetchProfile)
 router.get('/fetchProfilePercentage', verifyToken, authorize(['employee']), fetchProfilePercentage)
 router.get('/fetchEmployeeAllJobs', verifyToken, authorize(['employee']), fetchEmployeeAllJobs)
+router.get('/fetchApplicantsDetail', verifyToken, authorize(['employee']), fetchData)
+
 
 router.delete('/delete/job', verifyToken, authorize(['employee']), deleteJob)
 
