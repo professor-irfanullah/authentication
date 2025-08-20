@@ -3,4 +3,5 @@ node_modules/
 *.log
 dist/
 testApi.http
+employee.http
 public
