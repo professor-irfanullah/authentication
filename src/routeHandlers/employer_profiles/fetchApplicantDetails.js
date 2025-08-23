@@ -3,6 +3,7 @@ const { getEmployeeID } = require('../../utilities/getEmployeeID')
 const fetchData = async (req, res, next) => {
   const user = req.user
   const tempQuery = `SELECT 
+  AP.application_id,
   U.name,
   U.email,
   J.title,
@@ -51,7 +52,6 @@ WHERE J.employer_id = $1;
     const empId = await getEmployeeID(user.user_id)
     if (empId.length) {
       const response = await query(tempQuery, [empId[0].profile_id])
-      console.log(response.rows);
       return res.status(200).json(response.rows)
 
     }
