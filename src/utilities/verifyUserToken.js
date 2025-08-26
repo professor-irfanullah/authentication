@@ -7,14 +7,14 @@ const verifyUserIdentity = async (req, res) => {
     const verificationQuery = `UPDATE users SET is_verified = $1 WHERE email = $2`;
     const fetchToken = `SELECT verification_token FROM users WHERE email = $1 AND is_verified = $2`;
 
-    try {
-        if (!token) {
-            return res.status(400).json({ err: "Invalid verification link" });
-        }
+    if (!token) {
+        return res.status(400).json({ err: "Invalid verification link" });
+    }
 
-        if (!email) {
-            return res.status(400).json({ err: 'Email is required' });
-        }
+    if (!email) {
+        return res.status(400).json({ err: 'Email is required' });
+    }
+    try {
 
         const result = await query(fetchToken, [email, false]);
 
