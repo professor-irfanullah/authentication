@@ -78,18 +78,22 @@ const registerUser = async (req, res, next) => {
             const mailOptions = {
                 from: process.env.adminEmail,
                 to: email,
-                subject: "Verify Your Email Address",
+                subject: "Confirm Your Email – Welcome to Job Connect",
                 html: `
-                    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-                        <h2>Welcome to Secure Authentication System!</h2>
-                        <p>Please verify your email address to complete your registration.</p>
-                        <a href="${verificationLink}" 
-                           style="display: inline-block; padding: 10px 20px; background-color: #4CAF50; color: white; text-decoration: none; border-radius: 5px;">
-                            Verify Email
-                        </a>
-                        <p>If you didn't request this, please ignore this email.</p>
-                    </div>
-                `,
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; color: #333;">
+            <h2 style="color: #2c3e50;">Welcome to Job Connect!</h2>
+            <p>Thank you for signing up. To complete your registration and start exploring job opportunities, please verify your email address.</p>
+            <p style="margin: 20px 0;">
+                <a href="${verificationLink}" 
+                   style="display: inline-block; padding: 12px 20px; background-color: #4F46E5; color: #ffffff; text-decoration: none; border-radius: 5px;">
+                    Confirm Email Address
+                </a>
+            </p>
+            <p>If you did not create an account on our job board, you can safely ignore this email.</p>
+            <hr style="margin-top: 30px; border: none; border-top: 1px solid #eee;" />
+            <p style="font-size: 12px; color: #888;">Need help? Contact our support team at khanprofessor1212@gmail.com</p>
+        </div>
+    `,
             };
 
             await transporter.sendMail(mailOptions);
