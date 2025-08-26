@@ -10,6 +10,8 @@ const { logOutMiddleware } = require('../middlewares/logoutMiddleware')
 const { verifyAccountStatus } = require('../routeHandlers/accountStatus')
 const { changePassword } = require('../routeHandlers/seekersOnlyHandlers/changePassword')
 const authorize = require('../middlewares/authorizationMiddleware')
+const { verifyAccount } = require('../routeHandlers/verifyAccount')
+const { sendEmailForAccountVerification } = require('../routeHandlers/sendAccoundVerificationEmail')
 
 
 
@@ -19,6 +21,7 @@ router.use(express.json())
 router.get('/api/test', testHandler)
 router.get('/verify', verifyUserIdentity)
 router.get('/accountStatus', verifyAccountStatus)
+router.get('/email/user', sendEmailForAccountVerification)
 
 
 router.post('/register', registerUser)
@@ -26,6 +29,8 @@ router.post('/login', LoginUser)
 router.post('/protected', verifyToken, protected)
 router.post('/logout', logOutMiddleware, logOut)
 router.post('/change/password', verifyToken, authorize(['seeker', 'employee']), changePassword)
+router.post('/verify/user', verifyAccount)
+
 
 
 
