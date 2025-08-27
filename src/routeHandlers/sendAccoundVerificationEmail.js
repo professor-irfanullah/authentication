@@ -37,9 +37,13 @@ const sendEmailForAccountVerification = async (req, res, next) => {
             <p style="font-size: 12px; color: #888;">Need help? Contact our support team at khanprofessor1212@gmail.com</p>
         </div>`
             }
-            await transporter.sendMail(mailOptions)
-
-            res.status(200).json({ msg: `An email was sent to '${email}' please verify to proceed.` })
+            const isVerified = await transporter.verify()
+            console.log(isVerified);
+            if (isVerified) {
+                await transporter.sendMail(mailOptions)
+                return res.status(200).json({ msg: `An email was sent to '${email}' please verify to proceed.` })
+            }
+            return res.status(500).json({ msg: "Cannot send email to this account" })
         }
     } catch (error) {
         next(error)
