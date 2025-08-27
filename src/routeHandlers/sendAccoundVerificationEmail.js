@@ -4,13 +4,13 @@ const crypto = require('crypto')
 const { hashPassword } = require('../utilities/hashing&tokens')
 const { query } = require('../database/db')
 const sendEmailForAccountVerification = async (req, res, next) => {
-    const upd_query = `update users set verification_token = $1 , updated_at = $2 where email = $3`
+    const upd_query = `update users set verification_token = $1 , updated_at = now() where email = $2`
     const { email } = req.query
     const token = crypto.randomBytes(32).toString('hex')
     const verifcation_link = `${req.protocol}://${req.get('host')}/api/auth/verify?token=${token}&email=${email}`
     try {
         const hashedToken = await hashPassword(token)
-        const response = await query(upd_query, [hashedToken, 'now()', email])
+        const response = await query(upd_query, [hashedToken, email])
         if (response.rowCount === 1) {
             const transporter = nodemailer.createTransport({
                 service: process.env.service,
@@ -47,6 +47,8 @@ const sendEmailForAccountVerification = async (req, res, next) => {
             res.status(500).json({ err: "Unable to send email" })
         }
     } catch (error) {
+        console.log(error);
+
         next(error)
     }
 }
