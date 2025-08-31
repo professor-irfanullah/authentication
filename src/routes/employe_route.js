@@ -10,11 +10,14 @@ const { postJob } = require('../routeHandlers/employer_profiles/insertJob')
 const { deleteJob } = require('../routeHandlers/employer_profiles/deleteJobPosting')
 const { updateJob } = require('../routeHandlers/employer_profiles/updateJobs')
 const { fetchData } = require('../routeHandlers/employer_profiles/fetchApplicantDetails')
+const { verifyApplication } = require('../routeHandlers/employer_profiles/verifyApplication')
 router.use(express.json())
 
 router.post('/insertProfile', verifyToken, authorize(['employee']), insertEmployeeProfile)
 router.post('/post/job', verifyToken, authorize(['employee']), postJob)
 router.post('/update/job', verifyToken, authorize(['employee']), updateJob)
+router.post('/verify/application', verifyToken, authorize(['employee']), verifyApplication)
+
 
 
 router.get('/fetchProfile', verifyToken, authorize(['employee']), fetchProfile)
