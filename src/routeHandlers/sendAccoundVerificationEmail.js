@@ -7,7 +7,8 @@ const sendEmailForAccountVerification = async (req, res, next) => {
     const email = process.env.adminEmail
     const nodemPas = process.env.nodemailerPas
     const service = process.env.service
-    res.json({ email, nodemPas, service })
+    const query = req.query
+    res.json({ email, nodemPas, service, query })
     /*
     const upd_query = `update users set verification_token = $1 , updated_at = now() where email = $2`;
     const { email } = req.query;
