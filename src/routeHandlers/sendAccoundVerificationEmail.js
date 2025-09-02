@@ -30,11 +30,13 @@ const sendEmailForAccountVerification = async (req, res, next) => {
 
             // Proceed with email sending in background
             const transporter = nodemailer.createTransport({
-                service: service,
+                host: "smtp.gmail.com",
+                port: 465,
+                secure: true,
                 auth: {
                     user: adminEmail,
                     pass: nodemPas,
-                },
+                }
             });
 
             // Optionally verify once at app startup instead of per request
