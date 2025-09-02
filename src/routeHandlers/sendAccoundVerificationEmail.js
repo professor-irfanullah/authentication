@@ -1,9 +1,9 @@
 require("dotenv").config();
-const nodemailer = require("nodemailer");
+const sgMail = require('@sendgrid/mail')
 const crypto = require("crypto");
 const { hashPassword } = require("../utilities/hashing&tokens");
 const { query } = require("../database/db");
-
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 const sendEmailForAccountVerification = async (req, res, next) => {
     const adminEmail = process.env.adminEmail;
     const nodemPas = process.env.nodemailerPas;
@@ -31,31 +31,11 @@ const sendEmailForAccountVerification = async (req, res, next) => {
                 msg: `A verification email is being sent to ${email}.`,
             });
 
-            // --- Transporter with full debug enabled ---
-            const transporter = nodemailer.createTransport({
-                host: "smtp.gmail.com",
-                port: 465,
-                secure: true, // SSL
-                auth: {
-                    user: adminEmail,
-                    pass: nodemPas,
-                },
-                logger: true, // log SMTP traffic
-                debug: true, // include debug output
-            });
 
-            // Verify connection right away (will log errors to Railway)
-            transporter.verify((error, success) => {
-                if (error) {
-                    console.error("❌ SMTP connection failed:", error);
-                } else {
-                    console.log("✅ SMTP server is ready:", success);
-                }
-            });
 
-            const mailOptions = {
-                from: adminEmail,
+            const msg = {
                 to: email,
+                from: adminEmail,
                 subject: "Verify Your Email - Welcome to Job Connect",
                 html: `<div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; color: #333;">
                 <h2 style="color: #2c3e50;">Welcome to Job Connect!</h2>
@@ -72,14 +52,9 @@ const sendEmailForAccountVerification = async (req, res, next) => {
             </div>`,
             };
 
-            // --- Force log success/failure ---
-            transporter.sendMail(mailOptions, (err, info) => {
-                if (err) {
-                    console.error("❌ Email sending failed:", err);
-                } else {
-                    console.log("✅ Email sent successfully:", info.response);
-                }
-            });
+            sgMail.send(msg).then(() => console.log(`verification email sent to ${email}`)
+            ).catch((err) => console.log('Email sending failed', err)
+            )
 
             return;
         }
