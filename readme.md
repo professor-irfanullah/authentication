@@ -48,64 +48,10 @@ This project uses a PostgreSql database. You’ll need to create the database an
 
 `your_database_name` (as defined in your `.env` file)
 
-### 📂 Table: `users`
-
-| Column               | Type                      | Attributes                             |
-| -------------------- | ------------------------- | -------------------------------------- |
-| `user_id`            | INT                       | SERIAL ,Primary Key                    |
-| `name`               | VARCHAR(255)              | NOT NULL                               |
-| `email`              | VARCHAR(255)              | UNIQUE, NOT NULL                       |
-| `password`           | VARCHAR(255)              | Hashed with bcrypt, NOT NULL           |
-| `created_at`         | TIMESTAMP                 | Default: CURRENT_TIMESTAMP             |
-| `updated_at`         | TIMESTAMP                 | Default: CURRENT_TIMESTAMP on update   |
-| `is_verified`        | BOOLEAN                   | Default: FALSE                         |
-| `verification_token` | VARCHAR(255)              | Nullable (used for email verification) |
-| `role`               | enum('seeker , employee') | DEFAULT 'seeker'                       |
-
-### 📂 Table: `seeker_profiles`
-
-| Column         | Type                         | Attributes                                          |
-| -------------- | ---------------------------- | --------------------------------------------------- |
-| `profile_id`   | INT                          | SERIAL ,Primary Key                                 |
-| `user_id`      | INT,                         | NOT NULL, REFRENCES(USER_USER_ID) ON DELETE CASCADE |
-| `headline`     | VARCHAR(255)                 | NOT NULL                                            |
-| `bio`          | TEXT                         | NOT NULL                                            |
-| `location`     | VARCHAR(255)                 | NOT NULL                                            |
-| `linkedin_url` | VARCHAR(255)                 | NOT NULL                                            |
-| `github_url`   | VARCHAR(255)                 | NOT NULL                                            |
-| `is_public`    | ENUM('private' , 'public') , | DEFAULT('private')                                  |
-| `created_at`   | TIMESTAMP                    | DEFAULT CURRENT_TIMESTAMP                           |
-| `updated_at`   | TIMESTAMP                    | DEFAULT CURRENT_TIMESTAMP                           |
-
-### 📂 Table: `seeker_education`
-
-| Column           | Type         | Attributes                                            |
-| ---------------- | ------------ | ----------------------------------------------------- |
-| `education_id`   | INT          | SERIAL, Primary Key                                   |
-| `user_id`        | INT          | NOT NULL, REFERENCES(users.user_id) ON DELETE CASCADE |
-| `institution`    | VARCHAR(255) | NOT NULL                                              |
-| `degree`         | VARCHAR(100) | NOT NULL                                              |
-| `field_of_study` | VARCHAR(100) | NOT NULL                                              |
-| `start_date`     | DATE         | NOT NULL                                              |
-| `end_date`       | DATE         | NULLABLE                                              |
-| `created_at`     | TIMESTAMP    | DEFAULT CURRENT_TIMESTAMP                             |
-
-### 📂 Table: `seeker_skills`
-
-| Column                | Type                                     | Attributes                                            |
-| --------------------- | ---------------------------------------- | ----------------------------------------------------- |
-| `skill_id`            | INT                                      | SERIAL, Primary Key                                   |
-| `user_id`             | INT                                      | NOT NULL, REFERENCES(users.user_id) ON DELETE CASCADE |
-| `skill_name`          | VARCHAR(100)                             | NOT NULL                                              |
-| `proficiency_level`   | ENUM('beginner','intermediate','expert') | NOT NULL                                              |
-| `years_of_experience` | INT                                      | DEFAULT 0                                             |
-| `created_at`          | TIMESTAMP                                | DEFAULT CURRENT_TIMESTAMP                             |
-
----
-
 ### 🛠️ SQL Schema for users
 
 ```sql
+CREATE TYPE USER_ROLE AS ENUM('seeker' , 'employee');
 CREATE TABLE users (
     user_id SERIAL PRIMARY KEY,
     name VARCHAR(50) NOT NULL,
@@ -131,9 +77,12 @@ CREATE TABLE seeker_profiles (
     phone VARCHAR(20),
     linkedin_url TEXT,
     github_url TEXT,
+    resume_url varchar(255),
+    profile_url varchar(255),
     visibility VARCHAR(20) DEFAULT 'public',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE(user_id)
 );
 
 ```
@@ -156,14 +105,84 @@ CREATE TABLE seeker_education (
 ### 🛠️ SQL Schema for seeker_skills
 
 ```sql
+CREATE TYPE CHK_SKILL AS ENUM('beginner' , 'intermediate' , 'expert')
 CREATE TABLE seeker_skills (
     skill_id SERIAL PRIMARY KEY,
     user_id INT REFERENCES users(user_id) ON DELETE CASCADE,
     skill_name VARCHAR(100) NOT NULL,
-    proficiency_level VARCHAR(50) CHECK (proficiency_level IN ('beginner', 'intermediate', 'expert')),
-    years_of_experience INT DEFAULT 0,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    proficiency_level CHK_SKILL NOT NULL,
+    years_of_experience INT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE(user_id , skill_name)
 );
+```
+
+### 🛠️ SQL Schema for employer_profiles
+
+```sql
+CREATE TABLE employer_profiles(
+  profile_id SERIAL PRIMARY KEY,
+  user_id INT NOT NULL UNIQUE REFERENCES users(user_id) ON DELETE CASCADE,
+  company_name VARCHAR(255),
+  company_description TEXT,
+  company_logo_url VARCHAR(255),
+  website_url VARCHAR(255),
+  industry VARCHAR(100),
+  company_size VARCHAR(50),
+  founded_year INT -- IT SHOULD BE CHANGE TO DATE,
+  headquarters_location VARCHAR(100),
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+)
+
+```
+
+### 🛠️ SQL Schema for jobs
+
+```SQL
+CREATE TYPE JOB_STATUS AS ENUM('open' , 'closed');
+CREATE TYPE emp_type AS ENUM('temporary' , 'full-time' , 'part-time' , 'contract' , 'internship');
+CREATE TABLE jobs(
+  job_id SERIAL PRIMARY KEY,
+  employer_id INT NOT NULL UNIQUE REFERENCES users(user_id) ON DELETE CASCADE,
+  title VARCHAR(255) NOT NULL,
+  description TEXT NOT NULL,
+  requirements TEXT NOT NULL,
+  location VARCHAR(255),
+  is_remote BOOLEAN DEFAULT FALSE NOT NULL,
+  salary_min INT NOT NULL,
+  salar_max INT NOT NULL,
+  status JOB_STATUS NOT NULL,
+  posted_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  application_deadline TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  responsibilities TEXT NOT NULL,
+  employment_type emp_type NOT NULL
+)
+```
+
+### 🛠️ SQL Schema for applications
+
+```sql
+CREATE TYPE ap_status AS ENUM('IN_PROGRESS' , 'REJECTED' , 'HIRED' , 'INTERVIEW');
+CREATE TABLE application
+application_id SERIAL PRIMARY KEY,
+job_id INT NOT NULL REFERENCES jobs(job_id) ON DELETE CASCADE,
+user_id INT NOT NULL REFERENCES users(user_id) ON DELETE CASCADE,
+applied_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+cover_letter VARCHAR(255) NOT NULL,
+application_status ap_status NOT NULL,
+unique(job_id , user_id)
+```
+
+### 🛠️ SQL Schema for favorite_jobs
+
+```sql
+CREATE TABLE favorite_job(
+  favorite_job_id SERIAL PRIMARY KEY,
+  user_id INT NOT NULL REFERENCES users(user_id) ON DELETE CASCADE,
+  job_id INT NOT NULL REFERENCES jobs(job_id) ON DELETE CASCADE,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+)
 ```
 
 ---
@@ -422,41 +441,6 @@ Returns the full profile data for the logged-in seeker.
 
 ---
 
-## 🌐 Production Deployment (Railway)
-
-The API is deployed to Railway. You can access the production instance via:
-
-```
-https://authentication-production-18e1.up.railway.app
-```
-
----
-
-### 🔐 Example (Railway) - Login
-
-```
-POST https://authentication-production-18e1.up.railway.app/api/auth/login
-```
-
-**Content-Type:** `application/json`
-
-```
-{
-  "email": "irfanprofessor60@gmail.com",
-  "password": "irfan"
-}
-```
-
----
-
-### 🔍 Example - Account Status Check (Railway)
-
-```
-GET https://authentication-production-18e1.up.railway.app/api/auth/accountStatus?email=irfanprofessor60@gmail.com
-```
-
----
-
 ## Usage Notes
 
 ```text
@@ -466,6 +450,8 @@ The protected route requires a valid JWT token in the Authorization header.
 
 After registration, users will receive an email with a verification link.
 ```
+
+---
 
 ### Example Responses
 
