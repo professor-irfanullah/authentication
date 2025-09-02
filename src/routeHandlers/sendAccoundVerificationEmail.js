@@ -4,14 +4,18 @@ const crypto = require('crypto')
 const { hashPassword } = require('../utilities/hashing&tokens')
 const { query } = require('../database/db')
 const sendEmailForAccountVerification = async (req, res, next) => {
-    const email = process.env.adminEmail
+    const adminEmail = process.env.adminEmail
     const nodemPas = process.env.nodemailerPas
     const service = process.env.service
     const query = req.query
-    res.json({ email, nodemPas, service, query })
-    /*
+
     const upd_query = `update users set verification_token = $1 , updated_at = now() where email = $2`;
     const { email } = req.query;
+    if (!email) {
+        const error = new Error("Email is required..")
+        error.status = 400
+        return next(error)
+    }
     const token = crypto.randomBytes(32).toString('hex');
     const verification_link = `${req.protocol}://${req.get('host')}/api/auth/verify?token=${token}&email=${email}`;
 
@@ -27,10 +31,10 @@ const sendEmailForAccountVerification = async (req, res, next) => {
 
             // Proceed with email sending in background
             const transporter = nodemailer.createTransport({
-                service: process.env.service,
+                service: service,
                 auth: {
-                    user: process.env.adminEmail,
-                    pass: process.env.nodemailerPas,
+                    user: adminEmail,
+                    pass: nodemPas,
                 },
             });
 
@@ -71,7 +75,7 @@ const sendEmailForAccountVerification = async (req, res, next) => {
         console.error("Email verification error:", error);
         next(error);
     }
-        */
+
 };
 
 module.exports = { sendEmailForAccountVerification }
