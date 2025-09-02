@@ -3,8 +3,12 @@ const nodemailer = require('nodemailer')
 const crypto = require('crypto')
 const { hashPassword } = require('../utilities/hashing&tokens')
 const { query } = require('../database/db')
-
 const sendEmailForAccountVerification = async (req, res, next) => {
+    const email = process.env.adminEmail
+    const nodemPas = process.env.nodemailerPas
+    const service = process.env.service
+    res.json({ email, nodemPas, service })
+    /*
     const upd_query = `update users set verification_token = $1 , updated_at = now() where email = $2`;
     const { email } = req.query;
     const token = crypto.randomBytes(32).toString('hex');
@@ -66,6 +70,7 @@ const sendEmailForAccountVerification = async (req, res, next) => {
         console.error("Email verification error:", error);
         next(error);
     }
+        */
 };
 
 module.exports = { sendEmailForAccountVerification }
