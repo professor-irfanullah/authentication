@@ -32,8 +32,7 @@ const sendEmail = async (to_email, verification_link) => {
         await sendGrid.send(msg)
         return { msg: `An Email has been sent to this '${to_email}' please check your inbox and spam folders to verify`, success: true }
     } catch (error) {
-        const errMsg = 'Field to send verification Email'
-        return { success: false, message: errMsg }
+        throw error
     }
 }
 module.exports = { sendEmail }
