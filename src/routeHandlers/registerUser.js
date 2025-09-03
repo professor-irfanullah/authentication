@@ -88,7 +88,7 @@ const registerUser = async (req, res, next) => {
             sendGrid.send(msg)
 
             return res.status(201).json({
-                message:
+                msg:
                     `An Email has been sent to '${email}' please verify your account to proceed`,
             });
         }
