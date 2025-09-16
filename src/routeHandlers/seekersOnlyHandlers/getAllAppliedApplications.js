@@ -2,14 +2,16 @@ const { query } = require("../../database/db");
 
 const getAllAppliedApplications = async (req, res, next) => {
     const insertionQuery = `SELECT
-	J.TITLE,
+    J.TITLE,
 	J.LOCATION,
 	AP.APPLIED_AT,
 	AP.APPLICATION_STATUS,
-	AP.APPLICATION_ID
+	AP.APPLICATION_ID,
+	C.logo_url
 FROM
-	JOBS J
+	JOBS_UPDATED J
 	JOIN APPLICATIONS AP ON J.JOB_ID = AP.JOB_ID
+	JOIN COMPANY C ON C.COMPANY_ID = J.COMPANY_ID 
 WHERE
 	AP.USER_ID = $1`;
     const user = req.user

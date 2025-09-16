@@ -1,21 +1,16 @@
 const { query } = require("../../database/db")
 
 const deleteJob = async (req, res, next) => {
-    const deleting_query = `delete from jobs where job_id = $1 and employer_id = $2`
-    const { job_id, employer_id } = req.query
+    const deleting_query = `delete from jobs_updated where job_id = $1`
+    const { job_id } = req.query
     if (!parseInt(job_id)) {
         const err = new Error('job_id is required')
         err.status = 400
         return next(err)
     }
-    if (!parseInt(employer_id)) {
-        const err = new Error('employer_id is required')
-        err.status = 400
-        return next(err)
-    }
 
     try {
-        const response = await query(deleting_query, [job_id, employer_id])
+        const response = await query(deleting_query, [job_id])
         if (response.rowCount === 1) {
             return res.status(200).json({ msg: 'Job Removed successfully' })
         }

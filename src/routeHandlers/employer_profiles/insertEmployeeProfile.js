@@ -1,48 +1,40 @@
 const { query } = require("../../database/db");
-const errFunction = (errMsg) => {
-    const err = new Error(errMsg);
-    err.status = 401;
-    return err;
-};
-const insertEmployeeProfile = async (req, res, next) => {
+const insertEmployeeProfile = async (req, res) => {
     const {
-        company_name,
-        company_description,
-        company_logo_url,
-        website_url,
-        industry,
-        company_size,
-        founded_year,
-        headquarters_location,
+        profile_photo_url,
+        about,
+        headline
     } = req.body;
     const user = req.user;
-    const insertionQuery = `insert into employer_profiles(user_id , company_name , company_description , company_logo_url , website_url , industry , company_size , founded_year , headquarters_location, updated_at)
-    values($1,$2,$3,$4,$5,$6,$7,$8,$9 , $10) 
-    on conflict (user_id) do update set company_name = excluded.company_name, company_description = excluded.company_description,company_logo_url = excluded.company_logo_url , website_url = excluded.website_url , company_size = excluded.company_size, founded_year = excluded.founded_year, headquarters_location = excluded.headquarters_location , industry = excluded.industry`;
+    const insertionQuery = `INSERT INTO
+	EMPLOYER_PROFILES (
+		USER_ID,
+        ABOUT,
+        HEADLINE,
+		UPDATED_AT
+	)
+VALUES
+	($1, $2,$3 ,now())
+ON CONFLICT (USER_ID) DO UPDATE
+SET
+    ABOUT = EXCLUDED.ABOUT,
+    HEADLINE = EXCLUDED.HEADLINE,
+    UPDATED_AT = EXCLUDED.UPDATED_AT`;
 
-    if (!company_name) {
-        return next(errFunction("Company name is required"));
-    }
     try {
         const response = await query(insertionQuery, [
             user.user_id,
-            company_name,
-            company_description,
-            company_logo_url,
-            website_url,
-            industry,
-            company_size,
-            founded_year,
-            headquarters_location,
-            "now()",
+            about,
+            headline
         ]);
         if (response.rowCount > 0) {
-            res.status(201).json({ msg: "operation successfull" });
+            return res.status(201).json({ msg: "operation successfull" });
         }
+        res.status(200).json({ msg: response })
     } catch (error) {
         console.log(error);
 
-        res.status(500).json({ err: error });
+        res.status(500).json(error);
     }
 };
 module.exports = { insertEmployeeProfile };
