@@ -5,7 +5,7 @@ const customErrorGenerator = (er, status = 500, next) => {
     return next(err)
 }
 const addCompany = async (req, res, next) => {
-    const { name, description, website_url, logo_url } = req.body
+    const { name, description, website_url, logo_url, address, industry, company_size } = req.body
     const user = req.user
     const insertionQuery = `INSERT INTO
 	COMPANY (
@@ -13,13 +13,19 @@ const addCompany = async (req, res, next) => {
 		DESCRIPTION,
 		WEBSITE_URL,
 		LOGO_URL,
-		CREATED_BY_USER_ID
+		CREATED_BY_USER_ID,
+        ADDRESS,
+        INDUSTRY,
+        COMPANY_SIZE
 	) VALUES (
 		$1,
 		$2,
 		$3,
 		$4,
-		$5
+		$5,
+        $6,
+        $7,
+        $8
 	);`
     if (!name || !name.trim()) {
         return customErrorGenerator('The name field is required', 400, next)
@@ -31,10 +37,19 @@ const addCompany = async (req, res, next) => {
     } if (!logo_url || !logo_url.trim()) {
         return customErrorGenerator('The logo_url field is required', 400, next)
     }
+    if (!address || !address.trim()) {
+        return customErrorGenerator('The Address field is required', 400, next)
+    }
+    if (!industry || !industry.trim()) {
+        return customErrorGenerator('The Industry field is required', 400, next)
+    }
+    if (!company_size || company_size === '') {
+        return customErrorGenerator('The Company Size field is required', 400, next)
+    }
 
 
     try {
-        const response = await query(insertionQuery, [name, description, website_url, logo_url, user.user_id])
+        const response = await query(insertionQuery, [name, description, website_url, logo_url, user.user_id, address, industry, company_size])
         if (response.rowCount === 1) {
             return res.status(201).json({ msg: `Company ${name} added successfully` })
         }
