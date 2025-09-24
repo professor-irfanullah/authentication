@@ -8,7 +8,7 @@ const seekerRoutes = require('./routes/seekers_route')
 const employeeRoutes = require('../src/routes/employe_route')
 const app = express()
 const allowedOrigins = [
-    'https://job-board-front-end-psi.vercel.app',
+    'https://job-board-front-end-zr2b.vercel.app',
     'https://job-board-frontend-production.up.railway.app',
     'http://localhost:5173'
 ];
