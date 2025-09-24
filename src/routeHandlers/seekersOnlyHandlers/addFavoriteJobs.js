@@ -12,7 +12,7 @@ const addToFavoriteJobs = async (req, res, next) => {
             return res.status(201).json({ msg: "Job Added to favorite_jobs" })
         }
     } catch (error) {
-        if (error.constraint === 'favorite_jobs_user_id_job_id_key') {
+        if (error.constraint === 'uniquerec') {
             const err = new Error('Job already exists!')
             err.status = 403
             return next(err)

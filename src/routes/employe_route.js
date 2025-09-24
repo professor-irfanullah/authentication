@@ -14,6 +14,7 @@ const { verifyApplication } = require('../routeHandlers/employer_profiles/verify
 const { addCompany } = require('../routeHandlers/employer_profiles/addCompany')
 const { fetchEmployeeCom } = require('../routeHandlers/employer_profiles/fetchEmployeeCompany')
 const { deleteCompany } = require('../routeHandlers/employer_profiles/deleteCompany')
+const { updateCompanyProfile } = require('../routeHandlers/employer_profiles/updateCompanyProfile')
 router.use(express.json())
 
 router.post('/insertProfile', verifyToken, authorize(['employee']), insertEmployeeProfile)
@@ -21,7 +22,7 @@ router.post('/post/job', verifyToken, authorize(['employee']), postJob)
 router.post('/update/job', verifyToken, authorize(['employee']), updateJob)
 router.post('/verify/application', verifyToken, authorize(['employee']), verifyApplication)
 router.post('/add/company', verifyToken, authorize(['employee']), addCompany)
-
+router.post('/update/company', verifyToken, authorize(['employee']), updateCompanyProfile)
 
 
 router.get('/fetchProfile', verifyToken, authorize(['employee']), fetchProfile)
@@ -32,6 +33,6 @@ router.get('/fetch/employ/company', verifyToken, authorize(['employee']), fetchE
 
 
 router.delete('/delete/job', verifyToken, authorize(['employee']), deleteJob)
-router.delete('/delete/company', deleteCompany)
+router.delete('/delete/company', verifyToken, authorize(['employee']), deleteCompany)
 
 module.exports = router 
