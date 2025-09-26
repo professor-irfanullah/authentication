@@ -3,7 +3,11 @@ const logOutMiddleware = (req, res, next) => {
     if (!token) {
         return res.status(404).json({ err: "Unable to perform this action" })
     }
-    res.clearCookie('token')
+    res.clearCookie('token', {
+        httpOnly: true,
+        sameSite: 'none',
+        secure: true
+    })
     next()
 }
 module.exports = { logOutMiddleware }
