@@ -1,4 +1,6 @@
 const { query } = require('../../database/db')
+const { getCompanyId } = require('../../utilities/getCompanyIDOfAnEmployee')
+const { insertIntoCompanyEmployees } = require('../../utilities/insertIntoCompanyEmployees')
 const customErrorGenerator = (er, status = 500, next) => {
     const err = new Error(er)
     err.status = status
@@ -51,9 +53,13 @@ const addCompany = async (req, res, next) => {
     try {
         const response = await query(insertionQuery, [name, description, website_url, logo_url, user.user_id, address, industry, company_size])
         if (response.rowCount === 1) {
-            return res.status(201).json({ msg: `Company ${name} added successfully` })
+            const GET_COMPANY_ID = await getCompanyId(name)
+            const { company_id } = GET_COMPANY_ID
+            const insertIntoEmployees = await insertIntoCompanyEmployees(company_id, user.user_id)
+            if (insertIntoEmployees) {
+                return res.status(201).json({ msg: `Company ${name} added successfully` })
+            }
         }
-        res.send(response)
     } catch (error) {
         if (error.constraint === 'company_name_key') {
             return customErrorGenerator(`The name ${name} already exists`, 403, next)
