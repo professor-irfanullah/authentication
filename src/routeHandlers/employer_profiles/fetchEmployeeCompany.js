@@ -1,8 +1,8 @@
 const { query } = require("../../database/db")
 
 const fetchEmployeeCom = async (req, res, next) => {
-	const user = req.user
-	const fetchQuery = /*`SELECT
+    const user = req.user
+    const fetchQuery = /*`SELECT
 	C.COMPANY_ID,
 	U.USER_ID,
 	C.NAME,
@@ -23,7 +23,7 @@ FROM
 	)
 	LEFT JOIN USERS U ON U.USER_ID = CE.USER_ID
 	WHERE U.USER_ID = $1`*/
-		`SELECT
+        `SELECT
     C.COMPANY_ID,
     U.USER_ID,
     C.NAME,
@@ -58,7 +58,7 @@ FROM
 FROM COMPANY C
 
 -- Join for the current user's relation to the company
-LEFT JOIN COMPANY_EMPLOYEES CE ON CE.COMPANY_ID = C.COMPANY_ID AND CE.USER_ID = 36
+LEFT JOIN COMPANY_EMPLOYEES CE ON CE.COMPANY_ID = C.COMPANY_ID AND CE.USER_ID = $1
 LEFT JOIN USERS U ON U.USER_ID = CE.USER_ID
 
 -- Join for all employees of the company
@@ -84,13 +84,13 @@ GROUP BY
     CE.VERIFIED_AT;
 `
 
-	try {
-		const response = await query(fetchQuery, [user.user_id])
-		res.send(response.rows)
-	} catch (error) {
-		console.log(error);
+    try {
+        const response = await query(fetchQuery, [user.user_id])
+        res.send(response.rows)
+    } catch (error) {
+        console.log(error);
 
-		res.status(500).json(error)
-	}
+        res.status(500).json(error)
+    }
 }
 module.exports = { fetchEmployeeCom }
