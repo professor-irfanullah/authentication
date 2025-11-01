@@ -1,22 +1,22 @@
 require("dotenv").config();
 const { query } = require("../database/db");
 const {
-    createToken,
-    tokenVerification,
+  createToken,
+  tokenVerification,
 } = require("../utilities/hashing&tokens");
 const { sendEmail } = require("./sendGridVerificationEmail");
 const sendInvitationEmail = async (req, res, next) => {
-    const data = req.data;
-    // generate a token
-    const token = createToken(data);
-    const link = `${req.protocol}://${req.get(
-        "host"
-    )}/api/employee/accept/invitation?token=${token}`;
-    let company = null;
-    try {
-        // fetch company name here
-        const companyName = await query(
-            `
+  const data = req.data;
+  // generate a token
+  const token = createToken(data);
+  const link = `${req.protocol}://${req.get(
+    "host"
+  )}/api/employee/accept/invitation?token=${token}`;
+  let company = null;
+  try {
+    // fetch company name here
+    const companyName = await query(
+      `
             SELECT
 	        NAME
             FROM
@@ -24,18 +24,18 @@ const sendInvitationEmail = async (req, res, next) => {
             WHERE
 	        C.COMPANY_ID = $1
             `,
-            [data.companyId]
-        );
-        // and store it into the users's verification token
-        // and then generate a link and send it inside email to the client email account
-        await query(
-            `update users set verification_token = $1, updated_at = now() where user_id = $2`,
-            [token, data.user_id]
-        );
-        company = companyName.rows[0];
-        // now send email to the employee
-        const subject = "Confirm Email Address";
-        const template = `<!DOCTYPE html>
+      [data.companyId]
+    );
+    // and store it into the users's verification token
+    // and then generate a link and send it inside email to the client email account
+    await query(
+      `update users set verification_token = $1, updated_at = now() where user_id = $2`,
+      [token, data.user_id]
+    );
+    company = companyName.rows[0];
+    // now send email to the employee
+    const subject = "Confirm Email Address";
+    const template = `<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -85,13 +85,18 @@ const sendInvitationEmail = async (req, res, next) => {
   </body>
 </html>
 `;
-        const response = await sendEmail(data.email, link, template, subject);
-        res.status(200).json(response);
-    } catch (error) {
-        console.log(error);
-        res.status(500).json("Something went wrong");
+    const response = await sendEmail(data.email, link, template, subject);
+    res.status(200).json(response);
+  } catch (error) {
+    if (error.code === 'ENOTFOUND' && error.hostname === 'api.sendgrid.com') {
+      const err = new Error('Unable to connect to the internet to provide email service')
+      err.status = 400
+      return next(err)
     }
+    console.log(error);
+    res.status(500).json("Something went wrong");
+  }
 
-    // console.log(user_id, email, companyId);
+  // console.log(user_id, email, companyId);
 };
 module.exports = { sendInvitationEmail };
