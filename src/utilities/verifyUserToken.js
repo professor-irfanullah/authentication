@@ -1,6 +1,40 @@
 const { query } = require('../database/db');
-const { verifyPassowrd } = require('../utilities/hashing&tokens');
+const { verifyPassowrd, tokenVerification } = require('../utilities/hashing&tokens');
+const tempErrorHandler = (msg, stat = 400) => {
+    const err = new Error(msg)
+    err.status = stat
+    return err
+}
+const verifyUserIdentity = async (req, res, next) => {
+    const { token, email, redirectURL } = req.query
+    if (!token) {
+        return next(tempErrorHandler('Missing argument'))
+    }
+    if (!email) {
+        return next(tempErrorHandler('Missing argument'))
+    }
 
+    try {
+        const isVerifiedToken = tokenVerification(token)
+        await query('UPDATE users SET is_verified = $1 WHERE email = $2', [true, isVerifiedToken.email])
+        if (redirectURL) {
+            // fit for current Local development 
+            return res.redirect(redirectURL + '/#/login')
+        }
+        res.status(200).json({ msg: "Verification Successfull" })
+
+    } catch (error) {
+        if (error.name === 'JsonWebTokenError') {
+            return next(error)
+        }
+        if (error.name === 'TokenExpiredError') {
+            return next(tempErrorHandler('Token Expired'))
+        }
+        console.log(error.name);
+        res.status(500).json({ err: "Something went wrong" })
+    }
+}
+/** 
 const verifyUserIdentity = async (req, res) => {
     const { token, email } = req.query;
 
@@ -40,5 +74,6 @@ const verifyUserIdentity = async (req, res) => {
         res.status(500).json({ err: 'Internal server error' });
     }
 };
+*/
 
 module.exports = { verifyUserIdentity };
