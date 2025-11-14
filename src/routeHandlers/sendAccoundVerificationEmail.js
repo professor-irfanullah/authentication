@@ -1,10 +1,36 @@
 require("dotenv").config();
-const crypto = require("crypto");
-const { hashPassword } = require("../utilities/hashing&tokens");
+const { createToken } = require("../utilities/hashing&tokens");
 const { query } = require("../database/db");
 const { sendEmail } = require('../sendGrid/sendGridVerificationEmail')
+const tempErrorHandler = (msg, stat = 400) => {
+    const err = new Error(msg)
+    err.status = stat
+    return err
+}
 const sendEmailForAccountVerification = async (req, res, next) => {
+    const { email } = req.query
+    const upd_query = `update users set verification_token = $1 , updated_at = now() where email = $2`;
+    if (!email) {
+        return next(tempErrorHandler('Missing Parameter'))
+    }
+    const token = createToken({ email })
+    const verification_link = `${req.protocol}://${req.get(
+        "host"
+    )}/api/auth/verify?token=${token}&email=${email}`;
 
+    try {
+        await query(upd_query, [token, email])
+        await sendEmail(email, verification_link)
+        res.status(200).json({ msg: 'verification email was sent to this account' })
+    } catch (error) {
+        console.log(error);
+        next('Something went wrong Please try again later')
+    }
+};
+
+module.exports = { sendEmailForAccountVerification };
+/*
+http://localhost:3000/api/auth/email/user?email=khanprofessor1212@gmail.com
     const upd_query = `update users set verification_token = $1 , updated_at = now() where email = $2`;
     const { email } = req.query;
     if (!email) {
@@ -37,6 +63,4 @@ const sendEmailForAccountVerification = async (req, res, next) => {
         }
         next(error);
     }
-};
-
-module.exports = { sendEmailForAccountVerification };
+*/
