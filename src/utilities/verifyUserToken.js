@@ -19,12 +19,14 @@ const verifyUserIdentity = async (req, res, next) => {
         await query('UPDATE users SET is_verified = $1 WHERE email = $2', [true, isVerifiedToken.email])
         if (redirectURL) {
             // fit for current Local development 
-            return res.redirect(redirectURL + '/#/login')
+            return res.redirect(redirectURL)
         }
         res.status(200).json({ msg: "Verification Successfull" })
 
     } catch (error) {
         if (error.name === 'JsonWebTokenError') {
+            console.log(error);
+
             return next(error)
         }
         if (error.name === 'TokenExpiredError') {
