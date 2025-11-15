@@ -48,11 +48,14 @@ const registerUser = async (req, res, next) => {
 
         res.status(200).json({ msg: "Accepted with errors" })
     } catch (error) {
-        console.log(error);
         if (error.constraint === 'users_email_key') {
             return next(tempErrorHandler('Duplicate Entry', 403))
         }
-        res.json(error)
+        if (error.code === 'ECONNRESET' || error.code === 'ENOTFOUND') {
+            return next(tempErrorHandler('Network Disconnected', 500))
+        }
+        console.log(error);
+        return next(tempErrorHandler('Network Disconnected', 500))
     }
 
 }
