@@ -1,5 +1,5 @@
-require('dotenv').config()
-const { Pool } = require('pg')
+require("dotenv").config();
+const { Pool } = require("pg");
 // const db = new Pool({
 //     host: process.env.user,
 //     user: process.env.pg_user,
@@ -11,25 +11,25 @@ const { Pool } = require('pg')
 const db = new Pool({
     connectionString: process.env.DATABASE_URL,
     ssl: {
-        rejectUnauthorized: false
-    }
+        rejectUnauthorized: false,
+    },
 });
 db.connect()
     .then(() => {
-        console.log('Connected to PostgreSQL successfully!');
+        console.log("Connected to PostgreSQL successfully!");
     })
-    .catch(err => {
-        console.error('Connection error:', err.stack);
+    .catch((err) => {
+        console.error("Connection error:", err.stack);
     });
 
 const query = (query, params) => {
     return new Promise((resolve, reject) => {
         db.query(query, params, (err, result) => {
             if (err) {
-                return reject(err)
+                return reject(err);
             }
-            resolve(result)
-        })
-    })
-}
-module.exports = { query }
+            resolve(result);
+        });
+    });
+};
+module.exports = { query, db };
