@@ -17,6 +17,7 @@ const { deleteCompany } = require('../routeHandlers/employer_profiles/deleteComp
 const { updateCompanyProfile } = require('../routeHandlers/employer_profiles/updateCompanyProfile')
 const { inviteEmployees } = require('../routeHandlers/employer_profiles/inviteEmployees')
 const { verifyInvite } = require('../routeHandlers/employer_profiles/verifyInvitation')
+const { addTechnologyToCompany } = require('../routeHandlers/employer_profiles/addTechnologyToCompany')
 router.use(express.json())
 
 router.post('/insertProfile', verifyToken, authorize(['employee']), insertEmployeeProfile)
@@ -26,7 +27,7 @@ router.post('/verify/application', verifyToken, authorize(['employee']), verifyA
 router.post('/add/company', verifyToken, authorize(['employee']), addCompany)
 router.post('/update/company', verifyToken, authorize(['employee']), updateCompanyProfile)
 router.post('/check/user/exists/to/invite', verifyToken, authorize(['employee']), inviteEmployees)
-
+router.post('/add/technology', verifyToken, authorize(['employee']), addTechnologyToCompany)
 
 router.get('/fetchProfile', verifyToken, authorize(['employee']), fetchProfile)
 router.get('/fetchProfilePercentage', verifyToken, authorize(['employee']), fetchProfilePercentage)
