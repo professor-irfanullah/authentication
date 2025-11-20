@@ -7,11 +7,15 @@ const tempErrorHandler = (msg, stat = 400) => {
 }
 const verifyUserIdentity = async (req, res, next) => {
     const { token, email, redirectURL } = req.query
+    const emailRegex = /^[a-zA-Z0-9._+-]+@gmail\.com$/
     if (!token) {
         return next(tempErrorHandler('Missing argument'))
     }
     if (!email) {
         return next(tempErrorHandler('Missing argument'))
+    }
+    if (!emailRegex.test(email)) {
+        return next(tempErrorHandler('Invalid Email', 400))
     }
 
     try {
