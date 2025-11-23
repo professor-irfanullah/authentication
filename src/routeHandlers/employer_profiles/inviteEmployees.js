@@ -25,7 +25,10 @@ const inviteEmployees = async (req, res, next) => {
     try {
         // Check if the requesting user is an HR at the specified company
         const response = await query(
-            `SELECT role FROM company_employees WHERE user_id = $1 AND company_id = $2`,
+            `SELECT u.name as HR_name, c.name as company_name,c.company_id,u.email,c.address,ce.role FROM company_employees ce 
+left join company c on c.company_id = ce.company_id
+left join users u on u.user_id = ce.user_id
+where u.user_id = $1 and c.company_id = $2`,
             [user.user_id, companyId]
         );
 
@@ -54,13 +57,9 @@ const inviteEmployees = async (req, res, next) => {
         if (new_emp_role === 'seeker') {
             return next(customError('Cannot invite users with seeker role', 403));
         }
-        req.data = { user_id, email, companyId, name }
-        // Successful invitation eligibility
-        // now lets integrate db 
-        // const dbResponse = await query(`insert into company_employees(company_id,user_id) values($1,$2)`, [companyId, user_id])
-        // return res.status(200).json({ msg: "Operation Successfull" });
+        const data = response.rows[0]
+        req.data = { data, name, new_emp_role, user_id, email }
         await sendInvitationEmail(req, res, next)
-
     } catch (error) {
         console.error("Invite Employees Error:", error);
         return res.status(500).json({ msg: "Something went wrong" });
