@@ -33,7 +33,7 @@ const addTechnologyToCompany = async (req, res, next) => {
     const role = await client.query(chk_HR_query, [company_id, user.user_id]);
 
     if (role.rows[0].role !== "HR") {
-      return next(tempErrorHandler("Unauthorized access", 403));
+      return next(tempErrorHandler("Unauthorized access", 401));
     }
 
     await client.query("BEGIN");
