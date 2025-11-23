@@ -1,9 +1,7 @@
 require("dotenv").config();
 const sendGrid = require('@sendgrid/mail')
 const { hashPassword, createToken } = require("../utilities/hashing&tokens");
-const { query } = require("../database/db");
-const crypto = require("crypto");
-const nodemailer = require("nodemailer");
+const { db } = require("../database/db");
 const { sendEmail } = require('../sendGrid/sendGridVerificationEmail')
 sendGrid.setApiKey(process.env.SENDGRID_API_KEY)
 const tempErrorHandler = (error, status) => {
@@ -16,6 +14,7 @@ const registerUser = async (req, res, next) => {
     const { user_name, email, password, baseUrl } = req.body
     const emailRegex = /^[a-zA-Z0-9._+-]+@gmail\.com$/
     const insertionQuery = `insert into users(name, email, password,verification_token) values ($1, $2, $3,$4)`
+    const client = await db.connect()
 
     if (!user_name) {
         return next(tempErrorHandler('Missing argument', 400))
@@ -34,7 +33,8 @@ const registerUser = async (req, res, next) => {
         // hash password
         const hashed = await hashPassword(password)
         const token = createToken({ user_name, email, hashed })
-        const response = await query(insertionQuery, [user_name, email, hashed, token])
+        await client.query('BEGIN')
+        const response = await client.query(insertionQuery, [user_name, email, hashed, token])
         if (response.rowCount === 1) {
             const verificationLink = `${req.protocol}://${req.get(
                 "host"
@@ -42,12 +42,14 @@ const registerUser = async (req, res, next) => {
             const response = await sendEmail(email, verificationLink, 1)
             console.log(response);
             // untill now email was sending successfully later we will see if something is missing
+            await client.query('COMMIT')
             return res.send(response)
         }
         // console.log(token);
 
         res.status(200).json({ msg: "Accepted with errors" })
     } catch (error) {
+        await client.query('ROLLBACK')
         if (error.constraint === 'users_email_key') {
             return next(tempErrorHandler('Duplicate Entry', 403))
         }
@@ -56,6 +58,9 @@ const registerUser = async (req, res, next) => {
         }
         console.log(error);
         return next(tempErrorHandler('Network Disconnected', 500))
+    }
+    finally {
+        client.release()
     }
 
 }
