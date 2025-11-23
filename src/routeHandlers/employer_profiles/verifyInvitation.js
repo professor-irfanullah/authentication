@@ -20,16 +20,15 @@ VALUES
     try {
 
         const isValidToken = tokenVerification(token)
-        await query(insertionQuery, [isValidToken.companyId, isValidToken.user_id])
-        res.status(201).json('Created')
-
+        await query(insertionQuery, [isValidToken.data.company_id, isValidToken.user_id])
+        res.status(201).json('Congratulations you have joined the company')
     } catch (error) {
 
         if (error.message === 'jwt expired') {
             return next(tempErrHandler('Session Expired', 400))
         }
         if (error.constraint === 'unique_c_record') {
-            return next(tempErrHandler('Already verified', 500))
+            return next(tempErrHandler('Already Joined', 403))
         }
         res.status(500).json({ err: "Something went wrong while verifying the invitation" })
     }
