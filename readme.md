@@ -12,7 +12,7 @@ A full-featured backend for a job board web application built with Node.js and E
 - 🔒 Password hashing using **bcrypt**
 - 🔐 JWT-based authentication for protected routes
 - 🍪 Session handling with **HTTP-only cookies**
-- 📧 Email notifications via **Nodemailer**
+- 📧 Email notifications via **Brevo**
 - 🧮 PostgreSQL database integration with **pg**
 - ⚙️ Environment-based configuration using `.env`
 
@@ -27,7 +27,7 @@ A full-featured backend for a job board web application built with Node.js and E
 - **jsonwebtoken**
 - **cookie-parser**
 - **dotenv**
-- **Nodemailer**
+- **Brevo**
 
 ---
 
@@ -61,7 +61,7 @@ CREATE TABLE users (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     is_verified BOOLEAN DEFAULT FALSE,
-    verification_token VARCHAR(255)
+    verification_token TEXT
 );
 ```
 
