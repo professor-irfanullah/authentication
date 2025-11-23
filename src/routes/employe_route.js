@@ -18,6 +18,7 @@ const { updateCompanyProfile } = require('../routeHandlers/employer_profiles/upd
 const { inviteEmployees } = require('../routeHandlers/employer_profiles/inviteEmployees')
 const { verifyInvite } = require('../routeHandlers/employer_profiles/verifyInvitation')
 const { addTechnologyToCompany } = require('../routeHandlers/employer_profiles/addTechnologyToCompany')
+const { deleteTechnologyFromCompany } = require('../routeHandlers/employer_profiles/deleteTechnologyFromCompany')
 router.use(express.json())
 
 router.post('/insertProfile', verifyToken, authorize(['employee']), insertEmployeeProfile)
@@ -39,5 +40,6 @@ router.get('/accept/invitation', verifyInvite)
 
 router.delete('/delete/job', verifyToken, authorize(['employee']), deleteJob)
 router.delete('/delete/company', verifyToken, authorize(['employee']), deleteCompany)
+router.delete('/delete/technology', verifyToken, authorize(['employee']), deleteTechnologyFromCompany)
 
 module.exports = router 
