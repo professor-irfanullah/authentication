@@ -10,7 +10,9 @@ const app = express()
 const allowedOrigins = [
     'https://job-board-front-end-zr2b.vercel.app',
     'https://job-board-frontend-production.up.railway.app',
-    'http://localhost:5173'
+    'http://localhost:5173',
+    "https://studio.botpress.cloud",
+    "https://botpress.cloud"
 ];
 
 app.use(cors({
