@@ -7,20 +7,14 @@ const authRouter = require('./routes/auth')
 const seekerRoutes = require('./routes/seekers_route')
 const employeeRoutes = require('../src/routes/employe_route')
 const app = express()
-const allowedOrigins = [
-    'https://job-board-front-end-zr2b.vercel.app',
-    'https://job-board-front-end-zr2b-itfm6lzsn.vercel.app',
-    'https://job-board-frontend-production.up.railway.app',
-    'http://localhost:5173',
-    "https://studio.botpress.cloud",
-    "https://botpress.cloud"
-];
+const allowedOrigins = (process.env.CORS_ALLOWED_ORIGINS).split(',')
 
 app.use(cors({
     origin: function (origin, callback) {
         if (!origin || allowedOrigins.includes(origin)) {
             callback(null, true);
         } else {
+            console.log(`The origin ${origin} : is blocked by CORS`);
             callback(new Error('Not allowed by CORS'));
         }
     },
