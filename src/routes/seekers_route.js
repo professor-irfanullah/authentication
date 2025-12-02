@@ -27,6 +27,7 @@ const { getAllAppliedApplications } = require('../routeHandlers/seekersOnlyHandl
 const { addToFavoriteJobs } = require('../routeHandlers/seekersOnlyHandlers/addFavoriteJobs')
 const { fetchFavoriteJobs } = require('../routeHandlers/seekersOnlyHandlers/fetchFavoriteJobs')
 const { removeSavedJob } = require('../routeHandlers/seekersOnlyHandlers/removeFavoriteJob')
+const { fetchAllCompanies } = require('../routeHandlers/seekersOnlyHandlers/fetchAllCompanies')
 
 
 
@@ -50,7 +51,7 @@ router.get('/get/profile/comp/percentage', verifyToken, authorize(['seeker']), g
 router.get('/get/all/jobs', allJobs)
 router.get('/get/favorite/jobs', verifyToken, authorize(['seeker']), fetchFavoriteJobs)
 router.get('/get/seeker/applications', verifyToken, authorize(['seeker']), getAllAppliedApplications)
-
+router.get('/get/all/companies', fetchAllCompanies)
 
 router.delete('/delete/favorite/job', verifyToken, authorize(['seeker']), removeSavedJob)
 
